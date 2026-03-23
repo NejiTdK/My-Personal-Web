@@ -1,0 +1,45 @@
+---
+/**
+ * Plantilla HTML base compartida por todas las páginas.
+ * Pertenece a: `src/layouts/Layout.astro` (layout raíz del sitio).
+ *
+ * Props:
+ * - `title`: título de la pestaña del navegador.
+ * - `description`: meta descripción SEO (opcional).
+ */
+interface Props {
+  title: string;
+  description?: string;
+}
+
+/** Título y descripción por defecto si no se pasan desde la página. */
+const { title, description = "Portafolio retro pixel art" } = Astro.props;
+---
+
+<!doctype html>
+<!-- Documento HTML5; `lang="es"` para accesibilidad e indexación en español. -->
+<html lang="es">
+  <head>
+    <!-- Codificación y viewport estándar para responsive. -->
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Favicon servido desde `/public` en la URL raíz del sitio. -->
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <!-- Preconnect acelera la carga de la fuente pixel desde Google Fonts. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <!-- Contenido de cada página inyectado aquí mediante `<Layout>...</Layout>`. -->
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  /* Estilos globales del sitio (tokens, animaciones, scrollbar, etc.). */
+  @import '../styles/global.css';
+</style>

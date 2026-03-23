@@ -1,0 +1,79 @@
+---
+/**
+ * Sección héroe de la página de inicio (pantalla completa visual).
+ * Pertenece a: `src/components/HeroSection.astro`.
+ * Usado en: `src/pages/index.astro`.
+ *
+ * Muestra fondo, retrato/logo con scanlines, título, rol, tagline y CTA a la sección sobre mí.
+ */
+interface Props {
+  /** Nombre corto del personaje/marca (reservado para futuros usos en plantilla). */
+  name?: string;
+  /** Subtítulo profesional bajo el nombre. */
+  title?: string;
+  /** Párrafo introductorio / bio breve. */
+  tagline?: string;
+}
+
+const { 
+  name = "ALECDEV",
+  title = "Desarrollador Frontend",
+  tagline = "Desarrollador frontend jr, entusiasta del desarrollo frontend y transformación de ideas en proyectos de la mano de IA, gamer, npc"
+} = Astro.props;
+---
+
+<!-- `id="inicio"`: destino potencial para “volver arriba” o enlaces internos. -->
+<section id="inicio" class="min-h-screen flex items-center justify-center pt-20 px-4 relative overflow-hidden">
+  <!-- Imagen de fondo a pantalla completa con opacidad reducida -->
+  <img src="/background.png" alt="" class="absolute inset-0 w-full h-full object-cover opacity-40" />
+  <!-- Degradado para legibilidad del texto sobre el fondo -->
+  <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#1a1a1a]/50 to-[#1a1a1a]"></div>
+  
+  <div class="relative z-10 text-center max-w-3xl">
+    <!-- Contenedor del logo con marco pixel y decoraciones flotantes -->
+    <div class="mb-8 relative inline-block">
+      <div class="mx-auto border-2 border-[#0D8BDB] relative overflow-hidden" style="box-shadow: 0 0 20px rgba(13, 139, 219, 0.3);">
+        <img src="/logo.png" alt="AlecDev Logo" class="w-48 h-48 object-contain" />
+        <!-- Capa de líneas horizontales tipo CRT sobre el logo -->
+        <div class="absolute inset-0 scanlines"></div>
+      </div>
+      
+      <!-- Adornos esquina: estrellas/diamantes con animación `float-animation` (global.css) -->
+      <div class="absolute -top-2 -right-2 w-6 h-6 bg-[#0D8BDB] float-animation" style="animation-delay: 0.2s;">
+        <span class="absolute inset-0 flex items-center justify-center text-xs text-[#1a1a1a]">★</span>
+      </div>
+      <div class="absolute -bottom-2 -left-2 w-5 h-5 bg-[#06476F] float-animation" style="animation-delay: 0.5s;">
+        <span class="absolute inset-0 flex items-center justify-center text-xs text-[#0D8BDB]">♦</span>
+      </div>
+    </div>
+
+    <!-- Título principal con acento en “DEV” y efecto CRT (`crt-flicker` en global.css) -->
+    <h1 class="font-pixel text-2xl md:text-4xl text-[#EDEDED] mb-4 tracking-wider crt-flicker">
+      ALEC<span class="text-[#0D8BDB]">DEV</span>
+    </h1>
+    
+    <!-- Rol profesional -->
+    <div class="inline-block bg-[#06476F]/50 px-4 py-2 mb-4 border border-[#0D8BDB]/30">
+      <p class="font-pixel text-sm md:text-base text-[#0D8BDB]">{title}</p>
+    </div>
+    
+    <p class="font-pixel text-xs md:text-sm text-[#DDE8EB]/80 leading-relaxed mb-8 max-w-xl mx-auto">
+      {tagline}
+    </p>
+
+    <!-- Llamadas a la acción -->
+    <div class="flex flex-wrap justify-center gap-4 mb-12">
+      <a 
+        href="#sobre-mi" 
+        class="px-6 py-3 bg-[#06476F] hover:bg-[#0D8BDB] transition-colors font-pixel text-xs relative group"
+      >
+        <span class="relative z-10">SOBRE MÍ</span>
+      </a>
+    </div>
+
+    <!-- Indicador de scroll hacia abajo -->
+    <div class="flex justify-center gap-6 text-[#0D8BDB]">
+      <span class="font-pixel text-xs animate-bounce" style="animation-duration: 1.5s;">▼</span>
+    </div>
+  </div>
+</section>

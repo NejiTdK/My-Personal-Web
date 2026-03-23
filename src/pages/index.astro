@@ -1,0 +1,33 @@
+---
+/**
+ * Página de inicio del portafolio AlecDev.
+ * Pertenece a: `src/pages/index.astro` → ruta `/` en el sitio generado.
+ *
+ * Orquesta el layout principal, navegación fija, héroe, sección de estadísticas/bio y pie.
+ */
+import Layout from '../layouts/Layout.astro';
+import PixelNav from '../components/PixelNav.astro';
+import HeroSection from '../components/HeroSection.astro';
+import StatsSection from '../components/StatsSection.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="AlecDev | Portafolio Retro">
+  <!-- Barra de navegación fija superior (compartida con otras páginas). -->
+  <PixelNav />
+  
+  <main class="relative">
+    <!-- Bloque principal: logo, título, tagline y CTA hacia #sobre-mi. -->
+    <HeroSection 
+      name="ALECDEV"
+      title="Desarrollador Frontend"
+      tagline="Desarrollador frontend jr, entusiasta del desarrollo frontend y transformación de ideas en proyectos de la mano de IA, gamer, npc"
+    />
+    
+    <!-- Perfil estilo RPG: HP/MP, bio, EXP, habilidades y enlace a proyectos. -->
+    <StatsSection name="ALECDEV" />
+  </main>
+  
+  <!-- Pie de página con copyright y decoración pixel. -->
+  <Footer />
+</Layout>

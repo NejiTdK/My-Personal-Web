@@ -1,0 +1,314 @@
+---
+/**
+ * Sección “Sobre mí” con estética de ficha de personaje RPG.
+ * Pertenece a: `src/components/StatsSection.astro`.
+ * Usado en: `src/pages/index.astro`.
+ *
+ * Contiene: retrato + nivel, barras simbólicas HP/MP (corazones y diamantes), biografía,
+ * barra de experiencia, lista de habilidades con barras de porcentaje, y CTA a `/proyectos`.
+ */
+interface Skill {
+  name: string;
+  level: number;
+  type: 'bar' | 'skill';
+}
+
+interface Props {
+  /** Nombre/marca (disponible para futuras plantillas; la UI usa texto fijo “ALECDEV”). */
+  name?: string;
+  /** Clases Tailwind extra para el contenedor raíz (opcional). */
+  class?: string;
+}
+
+const { class: className = "" } = Astro.props;
+
+/**
+ * Estadísticas temáticas de juego (valores decorativos, no datos dinámicos del usuario).
+ * - hp / maxHp: base para corazones (cada 100 HP = un corazón).
+ * - mp / maxMp: base para diamantes (cada 50 MP = un diamante).
+ * - exp / expToNext: porcentaje mostrado en la barra EXP.
+ * - level: número mostrado en la insignia “LV.” junto al retrato.
+ */
+const stats = {
+  hp: 1000,
+  maxHp: 1000,
+  mp: 420,
+  maxMp: 500,
+  exp: 3500,
+  expToNext: 10000,
+  level: 24
+};
+
+/** Cantidad total de “slots” de corazón según HP máximo. */
+const totalHearts = stats.maxHp / 100;
+/** Corazones completamente llenos. */
+const filledHearts = Math.floor(stats.hp / 100);
+/** Medio corazón si el resto de HP/100 ≥ 50. */
+const halfHeart = (stats.hp % 100) >= 50 ? 1 : 0;
+/** Corazones vacíos restantes. */
+const emptyHearts = totalHearts - filledHearts - halfHeart;
+
+/** Diamantes de MP: misma lógica que HP pero con pasos de 50. */
+const totalDiamonds = stats.maxMp / 50;
+const filledDiamonds = Math.floor(stats.mp / 50);
+const emptyDiamonds = totalDiamonds - filledDiamonds;
+
+/**
+ * Lista de habilidades con nivel en %.
+ * `type` distingue visualmente en datos (ambos se renderizan como barra en la UI actual).
+ */
+const skills: Skill[] = [
+  { name: "HTML/CSS", level: 95, type: 'bar' },
+  { name: "JavaScript", level: 88, type: 'bar' },
+  { name: "React", level: 82, type: 'bar' },
+  { name: "Astro", level: 90, type: 'bar' },
+  { name: "Node.js", level: 75, type: 'skill' },
+  { name: "Pixel Art", level: 92, type: 'skill' },
+];
+
+/** Texto largo de biografía; se parte por párrafos doble salto de línea (`\n\n`). */
+const bioText = `Hola, soy Alec y estoy muy entusiasmado con el futuro del desarrollo, particularmente con el impacto de la IA. Tengo 23 años y vengo de una formación en Ingeniería en Sistemas, aunque todavía estoy construyendo mi experiencia profesional en el campo.
+
+Actualmente, me identifico como desarrollador JR – me encanta la creatividad y el desafío de transformar ideas en soluciones tangibles. Lo que me motiva es usar la IA y los agentes de manera estratégica para crear proyectos innovadores.
+
+Aunque me considero con buenas bases, estoy siendo muy consciente de que la IA y el desarrollo son campos que evolucionan a una velocidad increíble. Estoy en una fase de aprendizaje intenso, y estoy particularmente enfocado en refinar mis habilidades y la ejecución de mis proyectos.
+
+Soy una persona analítica, perfeccionista y muy metódica. Antes de comenzar a construir, me gusta investigar, absorber información y buscar la inspiración que impulsará la idea. Sé que tengo mucho por aprender, pero estoy muy motivado para seguir creciendo y contribuir con mi enfoque y atención al detalle.`;
+---
+
+<!-- `id="sobre-mi"`: destino del menú y del botón del héroe. -->
+<section id="sobre-mi" class="py-20 px-4 relative">
+  <div class="max-w-5xl mx-auto">
+    <!-- Título de sección con flechas decorativas -->
+    <div class="text-center mb-12">
+      <h2 class="font-pixel text-xl md:text-2xl text-[#EDEDED] inline-block relative">
+        <span class="absolute -left-6 top-1/2 -translate-y-1/2 text-[#0D8BDB]">▶</span>
+        SOBRE MÍ
+        <span class="absolute -right-6 top-1/2 -translate-y-1/2 text-[#0D8BDB] rotate-180">▶</span>
+      </h2>
+    </div>
+
+    <!-- Marco exterior con sombra “neon” y borde primario -->
+    <div class="bg-[#0a0a12] border-2 border-[#0D8BDB] p-1 relative" style="box-shadow: 0 0 20px rgba(13, 139, 219, 0.15), inset 0 0 30px rgba(0,0,0,0.5);">
+      <div class="bg-[#0d1b2a] p-6 md:p-8">
+        <div class="grid md:grid-cols-[200px_1fr] gap-8">
+
+          <!-- Columna izquierda: avatar, nombre, HP (corazones), MP (diamantes) -->
+          <div class="flex flex-col items-center gap-4">
+            <div class="relative">
+              <div class="w-32 h-32 md:w-40 md:h-40 border-2 border-[#0D8BDB] overflow-hidden relative" style="box-shadow: 0 0 15px rgba(13, 139, 219, 0.3);">
+                <img src="/logo.png" alt="AlecDev" class="w-full h-full object-contain" />
+                <div class="absolute inset-0 scanlines"></div>
+              </div>
+              <!-- Badge de nivel superpuesto -->
+              <div class="absolute -top-1 -right-1 bg-[#0D8BDB] px-2 py-0.5">
+                <span class="font-pixel text-xs text-[#0a0a12] font-bold">LV.{stats.level}</span>
+              </div>
+            </div>
+
+            <div class="text-center">
+              <p class="font-pixel text-sm md:text-base text-[#EDEDED]">
+                ALEC<span class="text-[#0D8BDB]">DEV</span>
+              </p>
+              <p class="font-pixel text-[10px] text-[#0D8BDB]/70 mt-1">Desarrollador Frontend</p>
+            </div>
+
+            <!-- Bloque HP: corazones generados según cálculos en el frontmatter -->
+            <div class="w-full bg-[#0a0a12] border border-[#333] p-3">
+              <p class="font-pixel text-[10px] text-[#0D8BDB] mb-2">♥ HP</p>
+              <div class="flex flex-wrap gap-1">
+                {Array.from({ length: filledHearts }).map(() => (
+                  <span class="heart-full text-lg leading-none">♥</span>
+                ))}
+                {halfHeart === 1 && (
+                  <span class="heart-half text-lg leading-none">♥</span>
+                )}
+                {Array.from({ length: emptyHearts }).map(() => (
+                  <span class="heart-empty text-lg leading-none">♥</span>
+                ))}
+              </div>
+              <p class="font-pixel text-[10px] text-[#DDE8EB]/50 mt-1">{stats.hp}/{stats.maxHp}</p>
+            </div>
+
+            <!-- Bloque MP: diamantes -->
+            <div class="w-full bg-[#0a0a12] border border-[#333] p-3">
+              <p class="font-pixel text-[10px] text-[#0D8BDB] mb-2">◆ MP</p>
+              <div class="flex flex-wrap gap-1">
+                {Array.from({ length: filledDiamonds }).map(() => (
+                  <span class="diamond-full text-lg leading-none">◆</span>
+                ))}
+                {Array.from({ length: emptyDiamonds }).map(() => (
+                  <span class="diamond-empty text-lg leading-none">◆</span>
+                ))}
+              </div>
+              <p class="font-pixel text-[10px] text-[#DDE8EB]/50 mt-1">{stats.mp}/{stats.maxMp}</p>
+            </div>
+          </div>
+
+          <!-- Columna derecha: perfil textual, EXP, rejilla de habilidades -->
+          <div class="flex flex-col gap-6">
+            <div>
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-3 h-3 bg-[#0D8BDB]"></div>
+                <h3 class="font-pixel text-xs text-[#0D8BDB]">PERFIL</h3>
+              </div>
+              <div class="bio-shimmer space-y-3">
+                {bioText.split('\n\n').map((paragraph) => (
+                  <p class="font-pixel text-xs text-[#DDE8EB]/80 leading-relaxed">
+                    {paragraph.trim()}
+                  </p>
+                ))}
+              </div>
+              <div class="mt-4 pt-4 border-t border-[#06476F]/30">
+                <p class="font-pixel text-xs text-[#0D8BDB] italic">
+                  *"La práctica hace al maestro, YEAH!"*
+                </p>
+              </div>
+            </div>
+
+            <!-- Barra de experiencia con relleno proporcional a exp/expToNext -->
+            <div class="bg-[#0a0a12] border border-[#333] p-3">
+              <div class="flex justify-between items-center mb-2">
+                <p class="font-pixel text-[10px] text-[#0D8BDB]">★ EXP</p>
+                <p class="font-pixel text-[10px] text-[#DDE8EB]/50">{stats.exp}/{stats.expToNext}</p>
+              </div>
+              <div class="h-5 bg-[#0a0a12] border border-[#333] relative overflow-hidden">
+                <div class="exp-bar-zelda absolute top-0 left-0 h-full" style={`width: ${(stats.exp / stats.expToNext) * 100}%`}></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <span class="font-pixel text-[10px] text-white drop-shadow-[0_0_4px_rgba(0,0,0,0.8)]">
+                    {Math.round((stats.exp / stats.expToNext) * 100)}%
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-3 h-3 bg-[#0D8BDB]"></div>
+                <h3 class="font-pixel text-xs text-[#0D8BDB]">HABILIDADES</h3>
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                {skills.map((skill) => (
+                  <div class="skill-item group cursor-pointer">
+                    <div class="flex justify-between font-pixel text-[10px] mb-1">
+                      <span class="text-[#EDEDED] group-hover:text-[#0D8BDB] transition-colors">
+                        {skill.name}
+                      </span>
+                      <span class="text-[#0D8BDB]">{skill.level}%</span>
+                    </div>
+                    <div class="h-2 bg-[#0a0a12] border border-[#333] relative overflow-hidden">
+                      <div
+                        class="skill-bar-fill absolute top-0 left-0 h-full"
+                        style={`width: ${skill.level}%`}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA secundario hacia la página de proyectos -->
+    <div class="mt-8 text-center">
+      <a
+        href="/proyectos"
+        class="inline-block px-8 py-4 bg-[#0D8BDB] hover:bg-[#1eb3ff] transition-colors font-pixel text-sm"
+      >
+        VER PROYECTOS →
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Corazón lleno: rojo con brillo */
+  .heart-full {
+    color: #e53935;
+    text-shadow: 0 0 6px rgba(229, 57, 53, 0.5);
+    filter: drop-shadow(0 1px 0 #8b0000);
+  }
+
+  /* Medio corazón: gradiente en el glifo */
+  .heart-half {
+    background: linear-gradient(90deg, #e53935 50%, #3a1a1a 50%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 1px 0 #8b0000);
+  }
+
+  .heart-empty {
+    color: #3a1a1a;
+    text-shadow: none;
+  }
+
+  .diamond-full {
+    color: #42a5f5;
+    text-shadow: 0 0 6px rgba(66, 165, 245, 0.4);
+    filter: drop-shadow(0 1px 0 #0d47a1);
+  }
+
+  .diamond-empty {
+    color: #1a2a3a;
+    text-shadow: none;
+  }
+
+  /* Relleno de la barra EXP (degradado tipo HUD) */
+  .exp-bar-zelda {
+    background: linear-gradient(90deg, #0d47a1 0%, #1565c0 30%, #1e88e5 60%, #42a5f5 85%, #90caf9 100%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.3);
+  }
+
+  .skill-bar-fill {
+    background: linear-gradient(90deg, #06476F, #0D8BDB);
+  }
+
+  /* Scanlines locales sobre el retrato (además de utilidades globales homónimas). */
+  .scanlines {
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.15) 2px,
+      rgba(0, 0, 0, 0.15) 4px
+    );
+    pointer-events: none;
+  }
+
+  .bio-shimmer {
+    animation: pulse-glow-text 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow-text {
+    0%, 100% {
+      text-shadow: 0 0 5px var(--color-primary), 0 0 10px var(--color-primary);
+    }
+    50% {
+      text-shadow: 0 0 10px var(--color-primary), 0 0 20px var(--color-primary), 0 0 30px var(--color-primary);
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Realce al pasar el ratón sobre cada fila de habilidad:
+   * aumenta brillo de la barra de progreso (primer hijo del último contenedor).
+   */
+  document.querySelectorAll('.skill-item').forEach(item => {
+    item.addEventListener('mouseenter', () => {
+      const bar = item.querySelector('div:last-child > div:first-child') as HTMLElement;
+      if (bar) {
+        bar.style.filter = 'brightness(1.3)';
+      }
+    });
+
+    item.addEventListener('mouseleave', () => {
+      const bar = item.querySelector('div:last-child > div:first-child') as HTMLElement;
+      if (bar) {
+        bar.style.filter = 'brightness(1)';
+      }
+    });
+  });
+</script>

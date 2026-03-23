@@ -1,0 +1,202 @@
+/**
+ * Estilos globales del portafolio AlecDev.
+ * Pertenece a: `src/styles/global.css`.
+ * Carga: importado desde `src/layouts/Layout.astro` (bloque `<style is:global>`).
+ *
+ * Incluye: Tailwind v4, tema (variables CSS), reset suave, tipografía, scrollbar,
+ * utilidades visuales retro (scanlines, CRT, animaciones) y clases auxiliares para barras/galería.
+ */
+
+/* Integración Tailwind CSS 4 (procesada por @tailwindcss/vite). */
+@import "tailwindcss";
+
+/* Fuente pixel duplicada respecto al layout: refuerzo si otros puntos de entrada cargan solo este CSS. */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* Tokens de Tailwind 4 (@theme): colores semánticos para utilidades generadas. */
+@theme {
+  --color-soft-black: #1a1a1a;
+  --color-pure-black: #000000;
+  --color-primary: #0D8BDB;
+  --color-secondary: #06476F;
+  --color-text: #EDEDED;
+  --color-text-muted: #DDE8EB;
+}
+
+/* Variables CSS clásicas (:root) usadas por animaciones y utilidades personalizadas. */
+:root {
+  --color-bg: #1a1a1a;
+  --color-nav: #000000;
+  --color-primary: #0D8BDB;
+  --color-secondary: #06476F;
+  --color-text: #EDEDED;
+  --color-text-muted: #DDE8EB;
+  --color-border: #0D8BDB;
+  --color-accent: #0D8BDB;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: 'Press Start 2P', monospace;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+::selection {
+  background-color: var(--color-primary);
+  color: var(--color-pure-black);
+}
+
+/* Scrollbar personalizada (WebKit) */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-pure-black);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-secondary);
+  border: 2px solid var(--color-pure-black);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
+
+/* Sombras inset que simulan bisel pixel-art en contenedores */
+.pixel-border {
+  box-shadow: 
+    inset -4px -4px 0px 0px rgba(0, 0, 0, 0.5),
+    inset 4px 4px 0px 0px rgba(221, 232, 235, 0.1);
+}
+
+.pixel-border-light {
+  box-shadow: 
+    inset -2px -2px 0px 0px rgba(0, 0, 0, 0.3),
+    inset 2px 2px 0px 0px rgba(255, 255, 255, 0.1);
+}
+
+/**
+ * Scanlines en pseudo-elemento ::after (variante global).
+ * Distinta de `.scanlines` sin ::after usada en componentes como héroe/stats.
+ */
+.scanlines {
+  position: relative;
+}
+
+.scanlines::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.05),
+    rgba(0, 0, 0, 0.05) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Parpadeo sutil en texto (efecto monitor CRT). */
+.crt-flicker {
+  animation: flicker 0.15s infinite;
+}
+
+@keyframes flicker {
+  0% { opacity: 0.97; }
+  50% { opacity: 1; }
+  100% { opacity: 0.98; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Pulso de sombra usando --color-primary (footer, decoraciones). */
+@keyframes pulse-glow {
+  0%, 100% { 
+    box-shadow: 0 0 5px var(--color-primary), 0 0 10px var(--color-primary);
+  }
+  50% { 
+    box-shadow: 0 0 10px var(--color-primary), 0 0 20px var(--color-primary), 0 0 30px var(--color-primary);
+  }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
+.blink-animation {
+  animation: blink 1s step-end infinite;
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Barras temáticas reutilizables (HUD / RPG); pueden usarse fuera de StatsSection. */
+.hp-bar {
+  background: linear-gradient(90deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+  height: 12px;
+}
+
+.mp-bar {
+  background: linear-gradient(90deg, var(--color-primary) 0%, #1eb3ff 100%);
+  height: 12px;
+}
+
+.exp-bar {
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-text-muted) 100%);
+  height: 8px;
+}
+
+.skill-bar {
+  background: linear-gradient(90deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+  height: 8px;
+}
+
+.gallery-item {
+  transition: all 0.3s ease;
+}
+
+.gallery-item:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(13, 139, 219, 0.3);
+}
+
+.carousel-item {
+  animation: fadeIn 0.3s ease-out;
+}

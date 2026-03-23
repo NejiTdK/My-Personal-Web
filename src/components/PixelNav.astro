@@ -1,0 +1,52 @@
+---
+/**
+ * Navegación principal fija en la parte superior.
+ * Pertenece a: `src/components/PixelNav.astro`.
+ * Usado en: `index.astro`, `proyectos.astro`.
+ *
+ * En la home (`/`), el enlace “SOBRE MÍ” apunta al ancla `#sobre-mi`.
+ * En otras rutas, redirige a `/#sobre-mi` para que la sección exista en la página principal.
+ */
+const isIndex = Astro.url.pathname === '/';
+/** Entradas del menú: etiqueta visible y destino (ruta o ancla). */
+const navItems = [
+  { label: 'INICIO', href: '/' },
+  { label: 'SOBRE MÍ', href: isIndex ? '#sobre-mi' : '/#sobre-mi' },
+  { label: 'PROYECTOS', href: '/proyectos' },
+];
+---
+
+<!-- `nav`: landmark de navegación; `fixed` + `z-50` mantiene el menú sobre el contenido. -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-black border-b-2 border-[#0D8BDB]">
+  <div class="max-w-6xl mx-auto px-4 py-3">
+    <div class="flex items-center justify-center gap-8">
+      <!-- Marca + logo: enlace a la página de inicio -->
+      <a href="/" class="flex items-center gap-3 hover:scale-105 transition-transform">
+        <img 
+          src="/logo.png" 
+          alt="AlecDev Logo"
+          class="w-10 h-10 object-contain"
+        />
+        <span class="font-pixel text-sm text-[#EDEDED]">
+          ALEC<span class="text-[#0D8BDB]">DEV</span>
+        </span>
+      </a>
+
+      <!-- Lista de enlaces principales del sitio -->
+      <ul class="flex gap-6">
+        {navItems.map((item) => (
+          <li>
+            <a 
+              href={item.href}
+              class="font-pixel text-xs text-[#EDEDED] hover:text-[#0D8BDB] transition-colors relative group"
+            >
+              {item.label}
+              <!-- Subrayado animado al hover (efecto “pixel UI”). -->
+              <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#0D8BDB] transition-all group-hover:w-full"></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</nav>
