@@ -2,6 +2,8 @@
 dist/
 # generated types
 .astro/
+.cache/
+coverage/
 
 # dependencies
 node_modules/
@@ -15,10 +17,28 @@ pnpm-debug.log*
 
 # environment variables
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 .env.production
+!.env.example
 
-# macOS-specific files
+# OS-specific files
 .DS_Store
+Thumbs.db
+Desktop.ini
 
 # jetbrains setting folder
 .idea/
+
+# editor
+.vscode/
+
+# local logs and temp files
+*.log
+*.tmp
+*.temp
+
+# local resources
+myresources/
