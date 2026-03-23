@@ -11,6 +11,10 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
+  /** URL base del sitio desplegado. Cambia esto por tu URL real. */
+  site: 'https://NejiTdK.github.io',
+  /** Prefijo de la ruta para GitHub Pages (nombre del repositorio). */
+  base: '/My-Personal-Web/',
   vite: {
     /** Plugins de Vite aplicados al bundler interno de Astro. */
     plugins: [tailwindcss()]
