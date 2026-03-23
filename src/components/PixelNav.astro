@@ -7,12 +7,13 @@
  * En la home (`/`), el enlace “SOBRE MÍ” apunta al ancla `#sobre-mi`.
  * En otras rutas, redirige a `/#sobre-mi` para que la sección exista en la página principal.
  */
-const isIndex = Astro.url.pathname === '/';
+const isIndex = Astro.url.pathname === import.meta.env.BASE_URL;
+const baseUrl = import.meta.env.BASE_URL;
 /** Entradas del menú: etiqueta visible y destino (ruta o ancla). */
 const navItems = [
-  { label: 'INICIO', href: '/' },
-  { label: 'SOBRE MÍ', href: isIndex ? '#sobre-mi' : '/#sobre-mi' },
-  { label: 'PROYECTOS', href: '/proyectos' },
+  { label: 'INICIO', href: baseUrl },
+  { label: 'SOBRE MÍ', href: isIndex ? '#sobre-mi' : `${baseUrl}#sobre-mi` },
+  { label: 'PROYECTOS', href: `${baseUrl}proyectos/` },
 ];
 ---
 
@@ -21,9 +22,9 @@ const navItems = [
   <div class="max-w-6xl mx-auto px-4 py-3">
     <div class="flex items-center justify-center gap-8">
       <!-- Marca + logo: enlace a la página de inicio -->
-      <a href="/" class="flex items-center gap-3 hover:scale-105 transition-transform">
+      <a href={baseUrl} class="flex items-center gap-3 hover:scale-105 transition-transform">
         <img 
-          src="/logo.png" 
+          src={`${baseUrl}logo.png`} 
           alt="AlecDev Logo"
           class="w-10 h-10 object-contain"
         />

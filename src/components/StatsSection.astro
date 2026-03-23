@@ -21,6 +21,7 @@ interface Props {
 }
 
 const { class: className = "" } = Astro.props;
+const baseUrl = import.meta.env.BASE_URL;
 
 /**
  * Estadísticas temáticas de juego (valores decorativos, no datos dinámicos del usuario).
@@ -97,7 +98,7 @@ Soy una persona analítica, perfeccionista y muy metódica. Antes de comenzar a 
           <div class="flex flex-col items-center gap-4">
             <div class="relative">
               <div class="w-32 h-32 md:w-40 md:h-40 border-2 border-[#0D8BDB] overflow-hidden relative" style="box-shadow: 0 0 15px rgba(13, 139, 219, 0.3);">
-                <img src="/logo.png" alt="AlecDev" class="w-full h-full object-contain" />
+                <img src={`${baseUrl}logo.png`} alt="AlecDev" class="w-full h-full object-contain" />
                 <div class="absolute inset-0 scanlines"></div>
               </div>
               <!-- Badge de nivel superpuesto -->
@@ -214,7 +215,7 @@ Soy una persona analítica, perfeccionista y muy metódica. Antes de comenzar a 
     <!-- CTA secundario hacia la página de proyectos -->
     <div class="mt-8 text-center">
       <a
-        href="/proyectos"
+        href={`${baseUrl}proyectos/`}
         class="inline-block px-8 py-4 bg-[#0D8BDB] hover:bg-[#1eb3ff] transition-colors font-pixel text-sm"
       >
         VER PROYECTOS →

@@ -20,12 +20,13 @@ const {
   title = "Desarrollador Frontend",
   tagline = "Desarrollador frontend jr, entusiasta del desarrollo frontend y transformación de ideas en proyectos de la mano de IA, gamer, npc"
 } = Astro.props;
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <!-- `id="inicio"`: destino potencial para “volver arriba” o enlaces internos. -->
 <section id="inicio" class="min-h-screen flex items-center justify-center pt-20 px-4 relative overflow-hidden">
   <!-- Imagen de fondo a pantalla completa con opacidad reducida -->
-  <img src="/background.png" alt="" class="absolute inset-0 w-full h-full object-cover opacity-40" />
+  <img src={`${baseUrl}background.png`} alt="" class="absolute inset-0 w-full h-full object-cover opacity-40" />
   <!-- Degradado para legibilidad del texto sobre el fondo -->
   <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#1a1a1a]/50 to-[#1a1a1a]"></div>
   
@@ -33,7 +34,7 @@ const {
     <!-- Contenedor del logo con marco pixel y decoraciones flotantes -->
     <div class="mb-8 relative inline-block">
       <div class="mx-auto border-2 border-[#0D8BDB] relative overflow-hidden" style="box-shadow: 0 0 20px rgba(13, 139, 219, 0.3);">
-        <img src="/logo.png" alt="AlecDev Logo" class="w-48 h-48 object-contain" />
+        <img src={`${baseUrl}logo.png`} alt="AlecDev Logo" class="w-48 h-48 object-contain" />
         <!-- Capa de líneas horizontales tipo CRT sobre el logo -->
         <div class="absolute inset-0 scanlines"></div>
       </div>

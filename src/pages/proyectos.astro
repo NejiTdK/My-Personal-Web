@@ -19,6 +19,7 @@ interface Post {
 
 /** Colección de proyectos; añade objetos `{ src, description }` para poblar la página. */
 const posts: Post[] = [];
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <Layout title="AlecDev | Proyectos">
@@ -53,7 +54,7 @@ const posts: Post[] = [];
                 <!-- Cabecera tipo “perfil” con logo del sitio -->
                 <div class="flex items-center gap-3 px-4 py-3 border-b border-[#333]">
                   <div class="w-8 h-8 border border-[#0D8BDB] overflow-hidden flex-shrink-0">
-                    <img src="/logo.png" alt="AlecDev" class="w-full h-full object-contain" />
+                    <img src={`${baseUrl}logo.png`} alt="AlecDev" class="w-full h-full object-contain" />
                   </div>
                   <div class="flex-1 min-w-0">
                     <p class="font-pixel text-xs text-[#EDEDED]">ALEC<span class="text-[#0D8BDB]">DEV</span></p>
