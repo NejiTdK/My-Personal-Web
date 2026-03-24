@@ -1,79 +1,145 @@
 ---
-/**
- * Sección héroe de la página de inicio (pantalla completa visual).
- * Pertenece a: `src/components/HeroSection.astro`.
- * Usado en: `src/pages/index.astro`.
- *
- * Muestra fondo, retrato/logo con scanlines, título, rol, tagline y CTA a la sección sobre mí.
- */
 interface Props {
-  /** Nombre corto del personaje/marca (reservado para futuros usos en plantilla). */
   name?: string;
-  /** Subtítulo profesional bajo el nombre. */
   title?: string;
-  /** Párrafo introductorio / bio breve. */
   tagline?: string;
 }
 
 const { 
   name = "ALECDEV",
-  title = "Desarrollador Frontend",
-  tagline = "Desarrollador frontend jr, entusiasta del desarrollo frontend y transformación de ideas en proyectos de la mano de IA, gamer, npc"
+  title = "Desarrollador Front-end",
+  tagline = "Desarrollador front-end jr, entusiasta del desarrollo y transformación de ideas en proyectos con el uso de IA"
 } = Astro.props;
 const baseUrl = import.meta.env.BASE_URL;
+
+const techLogos = [
+  { name: 'HTML', delay: '0s', x: '10%' },
+  { name: 'CSS', delay: '0.2s', x: '25%' },
+  { name: 'JS', delay: '0.4s', x: '40%' },
+  { name: 'Astro', delay: '0.6s', x: '55%' },
+  { name: 'React', delay: '0.8s', x: '70%' },
+  { name: 'MySQL', delay: '1.0s', x: '85%' },
+];
 ---
 
-<!-- `id="inicio"`: destino potencial para “volver arriba” o enlaces internos. -->
-<section id="inicio" class="min-h-screen flex items-center justify-center px-4 relative overflow-hidden">
-  <!-- Imagen de fondo a pantalla completa con opacidad reducida -->
-  <img src={`${baseUrl}background.png`} alt="" class="absolute inset-0 w-full h-full object-cover opacity-40" />
-  <!-- Degradado para legibilidad del texto sobre el fondo -->
-  <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#1a1a1a]/50 to-[#1a1a1a]"></div>
-  
-  <div class="relative z-10 text-center max-w-3xl">
-    <!-- Contenedor del logo con marco pixel y decoraciones flotantes -->
-    <div class="mb-8 relative inline-block">
-      <div class="mx-auto border-2 border-[#0D8BDB] relative overflow-hidden" style="box-shadow: 0 0 20px rgba(13, 139, 219, 0.3);">
-        <img src={`${baseUrl}logo.png`} alt="AlecDev Logo" class="w-48 h-48 object-contain" />
-        <!-- Capa de líneas horizontales tipo CRT sobre el logo -->
-        <div class="absolute inset-0 scanlines"></div>
-      </div>
-      
-      <!-- Adornos esquina: estrellas/diamantes con animación `float-animation` (global.css) -->
-      <div class="absolute -top-2 -right-2 w-6 h-6 bg-[#0D8BDB] float-animation" style="animation-delay: 0.2s;">
-        <span class="absolute inset-0 flex items-center justify-center text-xs text-[#1a1a1a]">★</span>
-      </div>
-      <div class="absolute -bottom-2 -left-2 w-5 h-5 bg-[#06476F] float-animation" style="animation-delay: 0.5s;">
-        <span class="absolute inset-0 flex items-center justify-center text-xs text-[#0D8BDB]">♦</span>
+<section id="inicio" class="min-h-screen flex items-center justify-center px-3 sm:px-4 relative overflow-hidden py-16 sm:py-20">
+  <div class="relative z-10 text-center max-w-4xl w-full">
+    
+    <!-- Sprites tech flotantes - solo visible en desktop -->
+    <div class="hidden md:flex absolute top-0 left-0 w-full justify-between px-4 pointer-events-none" style="transform: translateY(-20px);">
+      {techLogos.map((tech) => (
+        <div 
+          class="w-10 h-10 float-animation"
+          style={`position: absolute; left: ${tech.x}; animation-delay: ${tech.delay};`}
+        >
+          {tech.name === 'HTML' && (
+            <svg viewBox="0 0 16 16" class="w-full h-full" image-rendering="pixelated">
+              <rect x="2" y="1" width="12" height="14" fill="#E44D26"/>
+              <rect x="3" y="2" width="10" height="12" fill="#F16529"/>
+              <rect x="5" y="5" width="6" height="1" fill="#FFFFFF"/>
+              <rect x="5" y="7" width="6" height="1" fill="#FFFFFF"/>
+              <rect x="5" y="9" width="4" height="1" fill="#FFFFFF"/>
+              <rect x="5" y="11" width="5" height="1" fill="#FFFFFF"/>
+            </svg>
+          )}
+          {tech.name === 'CSS' && (
+            <svg viewBox="0 0 16 16" class="w-full h-full" image-rendering="pixelated">
+              <rect x="2" y="1" width="12" height="14" fill="#264DE4"/>
+              <rect x="3" y="2" width="10" height="12" fill="#2965F1"/>
+              <rect x="4" y="4" width="3" height="1" fill="#FFFFFF"/>
+              <rect x="4" y="6" width="3" height="1" fill="#FFFFFF"/>
+              <rect x="4" y="8" width="2" height="1" fill="#FFFFFF"/>
+              <rect x="7" y="4" width="4" height="1" fill="#EBEBEB"/>
+              <rect x="7" y="6" width="4" height="1" fill="#EBEBEB"/>
+              <rect x="7" y="8" width="4" height="1" fill="#EBEBEB"/>
+              <rect x="7" y="10" width="4" height="1" fill="#EBEBEB"/>
+            </svg>
+          )}
+          {tech.name === 'JS' && (
+            <svg viewBox="0 0 16 16" class="w-full h-full" image-rendering="pixelated">
+              <rect x="2" y="1" width="12" height="14" fill="#F7DF1E"/>
+              <rect x="3" y="2" width="10" height="12" fill="#F7DF1E"/>
+              <rect x="4" y="4" width="3" height="3" fill="#323330"/>
+              <rect x="4" y="7" width="5" height="1" fill="#323330"/>
+              <rect x="4" y="9" width="5" height="1" fill="#323330"/>
+              <rect x="8" y="11" width="3" height="1" fill="#323330"/>
+              <rect x="10" y="10" width="1" height="2" fill="#323330"/>
+              <rect x="9" y="9" width="1" height="1" fill="#323330"/>
+            </svg>
+          )}
+          {tech.name === 'Astro' && (
+            <svg viewBox="0 0 16 16" class="w-full h-full" image-rendering="pixelated">
+              <rect x="3" y="2" width="10" height="12" fill="#FF5A03"/>
+              <path d="M8 3 L11 8 L8 7 L5 8 Z" fill="#FFFFFF"/>
+              <rect x="5" y="9" width="6" height="1" fill="#FFFFFF"/>
+              <rect x="5" y="11" width="6" height="1" fill="#FFFFFF"/>
+              <circle cx="8" cy="7" r="1" fill="#FF5A03"/>
+            </svg>
+          )}
+          {tech.name === 'React' && (
+            <svg viewBox="0 0 16 16" class="w-full h-full" image-rendering="pixelated">
+              <circle cx="8" cy="8" r="6" fill="#61DAFB"/>
+              <circle cx="8" cy="8" r="4" fill="#000000"/>
+              <circle cx="8" cy="8" r="3" fill="#61DAFB"/>
+              <circle cx="8" cy="5" r="1" fill="#61DAFB"/>
+              <circle cx="11" cy="8" r="1" fill="#61DAFB"/>
+              <circle cx="8" cy="11" r="1" fill="#61DAFB"/>
+              <circle cx="5" cy="8" r="1" fill="#61DAFB"/>
+            </svg>
+          )}
+          {tech.name === 'MySQL' && (
+            <svg viewBox="0 0 16 16" class="w-full h-full" image-rendering="pixelated">
+              <rect x="2" y="3" width="12" height="10" fill="#00758F"/>
+              <ellipse cx="8" cy="6" rx="4" ry="2" fill="#FFFFFF"/>
+              <path d="M6 8 Q8 10 10 8" stroke="#FFFFFF" stroke-width="1" fill="none"/>
+              <ellipse cx="8" cy="10" rx="2" ry="1" fill="#FFFFFF"/>
+              <circle cx="7" cy="9" r="0.5" fill="#00758F"/>
+              <circle cx="9" cy="9" r="0.5" fill="#00758F"/>
+            </svg>
+          )}
+        </div>
+      ))}
+    </div>
+
+    <!-- Avatar - icon.webp -->
+    <div class="mb-4 sm:mb-8 mt-8 sm:mt-12 w-fit mx-auto">
+      <div class="border-2 border-[#00E5FF] overflow-hidden" style="box-shadow: 4px 4px 0 #00E5FF;">
+        <img 
+          src={`${baseUrl}icon.webp`} 
+          alt="AlecDev" 
+          class="w-20 h-20 sm:w-28 sm:h-28 md:w-40 md:h-40 object-contain"
+          style="image-rendering: pixelated;"
+        />
       </div>
     </div>
 
-    <!-- Título principal con acento en “DEV” y efecto CRT (`crt-flicker` en global.css) -->
-    <h1 class="font-pixel text-2xl md:text-4xl text-[#EDEDED] mb-4 tracking-wider crt-flicker">
-      ALEC<span class="text-[#0D8BDB]">DEV</span>
+    <!-- Título principal -->
+    <h1 class="font-pixel text-xl sm:text-2xl md:text-4xl text-[#FFFFFF] mb-3 sm:mb-4 tracking-wider">
+      ALEC<span class="text-[#00E5FF]">DEV</span>
     </h1>
     
     <!-- Rol profesional -->
-    <div class="inline-block bg-[#06476F]/50 px-4 py-2 mb-4 border border-[#0D8BDB]/30">
-      <p class="font-pixel text-sm md:text-base text-[#0D8BDB]">{title}</p>
+    <div class="inline-block bg-[#0a0a0a] px-3 sm:px-4 py-1 sm:py-2 mb-3 sm:mb-4 border-2 border-[#00E5FF]">
+      <p class="font-pixel text-xs sm:text-sm md:text-base text-[#00E5FF]">{title}</p>
     </div>
     
-    <p class="font-pixel text-xs md:text-sm text-[#DDE8EB]/80 leading-relaxed mb-8 max-w-xl mx-auto">
+    <!-- Tagline -->
+    <p class="font-pixel text-[10px] sm:text-xs md:text-sm text-[#888888] leading-relaxed mb-6 sm:mb-8 max-w-xs sm:max-w-xl mx-auto px-2">
       {tagline}
     </p>
 
-    <!-- Llamadas a la acción -->
-    <div class="flex flex-wrap justify-center gap-4 mb-12">
+    <!-- CTA -->
+    <div class="flex flex-wrap justify-center gap-3 sm:gap-4 mb-8 sm:mb-12">
       <a 
         href="#sobre-mi" 
-        class="px-6 py-3 bg-[#06476F] hover:bg-[#0D8BDB] transition-colors font-pixel text-xs relative group"
+        class="px-5 sm:px-6 py-2 sm:py-3 bg-[#00E5FF] hover:bg-[#FFE500] transition-colors font-pixel text-[10px] sm:text-xs text-[#000000]"
       >
-        <span class="relative z-10">SOBRE MÍ</span>
+        SOBRE MÍ
       </a>
     </div>
 
-    <!-- Indicador de scroll hacia abajo -->
-    <div class="flex justify-center gap-6 text-[#0D8BDB]">
+    <!-- Indicador de scroll -->
+    <div class="flex justify-center gap-6 text-[#00E5FF]">
       <span class="font-pixel text-xs animate-bounce" style="animation-duration: 1.5s;">▼</span>
     </div>
   </div>

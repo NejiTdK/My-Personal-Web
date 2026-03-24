@@ -8,28 +8,28 @@ const navItems = [
 ];
 ---
 
-<nav class="absolute top-4 left-1/2 -translate-x-1/2 z-50 bg-[#0a0a12] border-2 border-[#0D8BDB] px-6 py-3" style="border-radius: 4px; box-shadow: 0 0 8px rgba(13,139,219,0.4), 0 0 16px rgba(6,71,111,0.3), 0 0 24px rgba(30,179,255,0.15);">
-  <div class="flex items-center justify-center gap-8">
-    <a href={baseUrl} class="flex items-center gap-3 hover:scale-105 transition-transform">
+<nav class="absolute top-2 sm:top-4 left-1/2 -translate-x-1/2 z-50 bg-[#000000] border-2 border-[#00E5FF] px-3 sm:px-6 py-2 sm:py-3" style="border-radius: 2px; box-shadow: 4px 4px 0 #00E5FF;">
+  <div class="flex items-center justify-center gap-3 sm:gap-8">
+    <a href={baseUrl} class="flex items-center gap-2 sm:gap-3 hover:scale-105 transition-transform">
       <img 
         src={`${baseUrl}logo.png`} 
         alt="AlecDev Logo"
-        class="w-10 h-10 object-contain"
+        class="w-8 h-8 sm:w-10 sm:h-10 object-contain"
       />
-      <span class="font-pixel text-sm text-[#EDEDED]">
-        ALEC<span class="text-[#0D8BDB]">DEV</span>
+      <span class="font-pixel text-xs sm:text-sm text-[#FFFFFF]">
+        ALEC<span class="text-[#00E5FF]">DEV</span>
       </span>
     </a>
 
-    <ul class="flex gap-6">
+    <ul class="flex gap-3 sm:gap-6">
       {navItems.map((item) => (
         <li>
           <a 
             href={item.href}
-            class="font-pixel text-xs text-[#EDEDED] hover:text-[#0D8BDB] transition-colors relative group"
+            class="font-pixel text-[10px] sm:text-xs text-[#FFFFFF] hover:text-[#FFE500] transition-colors relative group"
           >
             {item.label}
-            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#0D8BDB] transition-all group-hover:w-full"></span>
+            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#FFE500] transition-all group-hover:w-full"></span>
           </a>
         </li>
       ))}

@@ -1,56 +1,46 @@
 ---
-/**
- * Pie de página global del sitio.
- * Pertenece a: `src/components/Footer.astro`.
- * Usado en: páginas que lo importan explícitamente (`index.astro`, `proyectos.astro`).
- *
- * Incluye copyright, indicador “READY TO WORK”, versión y franja decorativa de píxeles.
- */
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
-<footer class="py-8 px-4 border-t-2 border-[#0D8BDB] relative overflow-hidden">
-  <!-- Capa de gradiente sobre el fondo del footer -->
+<footer class="py-8 px-4 border-t-2 border-[#00E5FF] relative overflow-hidden">
   <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
   
   <div class="max-w-6xl mx-auto relative z-10">
-    <!-- Fila principal: tres columnas en desktop, apiladas en móvil -->
     <div class="flex flex-col md:flex-row justify-between items-center gap-4">
       <div class="text-center md:text-left">
-        <p class="font-pixel text-xs text-[#EDEDED]">ALEC<span class="text-[#0D8BDB]">DEV</span> © 2026</p>
-        <p class="font-pixel text-xs text-[#DDE8EB]/50 mt-1">Todos los derechos reservados</p>
+        <p class="font-pixel text-xs text-[#FFFFFF]">ALEC<span class="text-[#00E5FF]">DEV</span> © 2026</p>
+        <p class="font-pixel text-xs text-[#888888] mt-1">Todos los derechos reservados</p>
       </div>
       
       <div class="flex items-center gap-4">
-        <!-- Estado “disponible” con punto animado -->
         <div class="flex items-center gap-2">
-          <span class="w-2 h-2 bg-[#0D8BDB] animate-pulse"></span>
-          <span class="font-pixel text-xs text-[#DDE8EB]/70">READY TO WORK</span>
+          <span class="w-2 h-2 bg-[#00E5FF]"></span>
+          <span class="font-pixel text-xs text-[#888888]">READY TO WORK</span>
         </div>
         
-        <div class="font-pixel text-xs text-[#DDE8EB]/30">
+        <div class="font-pixel text-xs text-[#888888]">
           v1.0.0
         </div>
       </div>
       
       <div class="text-center md:text-right">
-        <p class="font-pixel text-xs text-[#0D8BDB]">Hecho con</p>
-        <p class="font-pixel text-xs text-[#1eb3ff] mt-1">♥ y código</p>
+        <p class="font-pixel text-xs text-[#00E5FF] hover:text-[#FFE500] transition-colors">Hecho con</p>
+        <p class="font-pixel text-xs text-[#00E5FF] hover:text-[#FFE500] transition-colors mt-1">♥ y código</p>
       </div>
     </div>
     
-    <!-- Franja inferior: cuadrados con retraso escalonado en la animación -->
-    <div class="mt-6 pt-6 border-t border-[#0D8BDB]/30">
+    <div class="mt-6 pt-6 border-t border-[#333]">
       <div class="flex justify-center gap-2">
         {[...Array(20)].map((_, i) => (
           <span 
-            class="w-2 h-2 bg-[#0D8BDB]/50" 
-            style={`animation: pulse-glow 2s ease-in-out infinite; animation-delay: ${i * 0.1}s;`}
+            class="w-2 h-2 bg-[#FFE500] pulse-glow" 
+            style={`animation-delay: ${i * 0.1}s;`}
           ></span>
         ))}
       </div>
       
-      <p class="font-pixel text-xs text-[#DDE8EB]/30 mt-4 text-center">
-        — ALEC<span class="text-[#0D8BDB]">DEV</span> PORTFOLIO —
+      <p class="font-pixel text-xs text-[#888888] mt-4 text-center">
+        — ALEC<span class="text-[#00E5FF]">DEV</span> PORTFOLIO —
       </p>
     </div>
   </div>

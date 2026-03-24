@@ -1,23 +1,13 @@
 ---
-/**
- * Galería de proyectos del portafolio.
- * Pertenece a: `src/pages/proyectos.astro` → ruta `/proyectos`.
- *
- * Muestra una lista de `posts` (imagen + descripción). Si el array está vacío,
- * se muestra el estado vacío. Incluye un modal carrusel para ampliar imágenes
- * cuando hay elementos (script al final del archivo).
- */
 import Layout from '../layouts/Layout.astro';
 import PixelNav from '../components/PixelNav.astro';
 import Footer from '../components/Footer.astro';
 
-/** Formato de cada entrada de proyecto en la galería. */
 interface Post {
   src: string;
   description: string;
 }
 
-/** Colección de proyectos; añade objetos `{ src, description }` para poblar la página. */
 const posts: Post[] = [];
 const baseUrl = import.meta.env.BASE_URL;
 ---
@@ -26,50 +16,43 @@ const baseUrl = import.meta.env.BASE_URL;
   <PixelNav />
   
   <main class="relative min-h-screen">
-    <!-- `pt-20` compensa la altura de la navegación fija. -->
-    <section class="py-12 px-4">
+    <section class="py-8 sm:py-12 px-3 sm:px-4">
       <div class="max-w-lg mx-auto">
-        <!-- Cabecera de la sección -->
-        <div class="text-center mb-12">
-          <h1 class="font-pixel text-2xl md:text-3xl text-[#EDEDED] mb-4">
+        <div class="text-center mb-8 sm:mb-12">
+          <h1 class="font-pixel text-xl sm:text-2xl md:text-3xl text-[#FFFFFF] mb-2 sm:mb-4">
             PROYECTOS
           </h1>
-          <p class="font-pixel text-xs text-[#DDE8EB]/60">
+          <p class="font-pixel text-[10px] sm:text-xs text-[#888888]">
             Mis trabajos y creaciones
           </p>
         </div>
 
         {posts.length === 0 ? (
-          <!-- Estado sin proyectos: mensaje placeholder hasta que existan entradas. -->
-          <div class="text-center py-20">
-            <p class="font-pixel text-sm text-[#DDE8EB]/50">
+          <div class="text-center py-16 sm:py-20">
+            <p class="font-pixel text-xs sm:text-sm text-[#888888]">
               Sin proyectos aún
             </p>
           </div>
         ) : (
-          <!-- Tarjetas estilo feed: avatar, imagen clicable y descripción. -->
-          <div class="space-y-6">
+          <div class="space-y-4 sm:space-y-6">
             {posts.map((post, index) => (
-              <article class="bg-[#0a0a12] border border-[#333] overflow-hidden">
-                <!-- Cabecera tipo “perfil” con logo del sitio -->
-                <div class="flex items-center gap-3 px-4 py-3 border-b border-[#333]">
-                  <div class="w-8 h-8 border border-[#0D8BDB] overflow-hidden flex-shrink-0">
+              <article class="bg-[#0a0a0a] border-2 border-[#00E5FF] overflow-hidden" style="box-shadow: 4px 4px 0 #00E5FF;">
+                <div class="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 border-b border-[#333]">
+                  <div class="w-8 h-8 border-2 border-[#00E5FF] overflow-hidden flex-shrink-0">
                     <img src={`${baseUrl}logo.png`} alt="AlecDev" class="w-full h-full object-contain" />
                   </div>
                   <div class="flex-1 min-w-0">
-                    <p class="font-pixel text-xs text-[#EDEDED]">ALEC<span class="text-[#0D8BDB]">DEV</span></p>
+                    <p class="font-pixel text-xs text-[#FFFFFF]">ALEC<span class="text-[#00E5FF]">DEV</span></p>
                   </div>
                 </div>
 
-                <!-- Imagen del proyecto: `data-index` enlaza con el carrusel modal. -->
-                <div class="aspect-square bg-[#0d1b2a] cursor-pointer post-image" data-index={index}>
-                  <img src={post.src} alt="" class="w-full h-full object-contain" loading="lazy" />
+                <div class="max-h-64 sm:max-h-80 md:max-h-96 bg-[#0a0a0a] cursor-pointer post-image overflow-hidden" data-index={index}>
+                  <img src={post.src} alt="" class="w-full h-full object-contain max-h-full" loading="lazy" />
                 </div>
 
-                <!-- Texto descriptivo del proyecto -->
-                <div class="px-4 py-3">
-                  <p class="font-pixel text-xs text-[#DDE8EB]/90 leading-relaxed">
-                    <span class="text-[#EDEDED] font-bold mr-2">ALEC<span class="text-[#0D8BDB]">DEV</span></span>
+                <div class="px-3 sm:px-4 py-2 sm:py-3">
+                  <p class="font-pixel text-[10px] sm:text-xs text-[#888888] leading-relaxed">
+                    <span class="text-[#FFFFFF] mr-2">ALEC<span class="text-[#00E5FF]">DEV</span></span>
                     {post.description}
                   </p>
                 </div>
@@ -81,24 +64,23 @@ const baseUrl = import.meta.env.BASE_URL;
     </section>
   </main>
 
-  <!-- Modal fullscreen: navegación prev/sig, cierre y contador. Oculto por defecto (`hidden`). -->
-  <div id="carousel-modal" class="fixed inset-0 bg-black/95 z-50 hidden flex items-center justify-center">
-    <button id="carousel-close" class="absolute top-4 right-4 w-12 h-12 bg-[#0D8BDB] hover:bg-[#1eb3ff] transition-colors font-pixel text-xl flex items-center justify-center z-10">
+  <div id="carousel-modal" class="fixed inset-0 bg-black/95 z-50 hidden flex items-center justify-center p-2">
+    <button id="carousel-close" class="absolute top-2 sm:top-4 right-2 sm:right-4 w-10 sm:w-12 h-10 sm:h-12 bg-[#00E5FF] hover:bg-[#FFE500] transition-colors font-pixel text-lg sm:text-xl flex items-center justify-center text-[#000000] z-10">
       ×
     </button>
     
-    <button id="carousel-prev" class="absolute left-4 w-12 h-12 bg-[#06476F] hover:bg-[#0D8BDB] transition-colors font-pixel text-xl flex items-center justify-center">
+    <button id="carousel-prev" class="absolute left-2 sm:left-4 w-10 sm:w-12 h-10 sm:h-12 bg-[#00E5FF] hover:bg-[#FFE500] transition-colors font-pixel text-lg sm:text-xl flex items-center justify-center text-[#000000]">
       ‹
     </button>
     
-    <button id="carousel-next" class="absolute right-4 w-12 h-12 bg-[#06476F] hover:bg-[#0D8BDB] transition-colors font-pixel text-xl flex items-center justify-center">
+    <button id="carousel-next" class="absolute right-2 sm:right-4 w-10 sm:w-12 h-10 sm:h-12 bg-[#00E5FF] hover:bg-[#FFE500] transition-colors font-pixel text-lg sm:text-xl flex items-center justify-center text-[#000000]">
       ›
     </button>
 
-    <div class="max-w-5xl max-h-[80vh] relative">
-      <img id="carousel-image" src="" alt="" class="max-w-full max-h-[80vh] object-contain" />
+    <div class="max-w-full max-h-[80vh] relative px-8 sm:px-16">
+      <img id="carousel-image" src="" alt="" class="max-w-full max-h-[70vh] sm:max-h-[80vh] object-contain" />
       
-      <div id="carousel-counter" class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 px-4 py-2 font-pixel text-xs text-[#EDEDED]">
+      <div id="carousel-counter" class="absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 bg-black/50 px-3 sm:px-4 py-1 sm:py-2 font-pixel text-[10px] sm:text-xs text-[#FFFFFF]">
         1 / 1
       </div>
     </div>
@@ -108,10 +90,8 @@ const baseUrl = import.meta.env.BASE_URL;
 </Layout>
 
 <script>
-  /** Índice de la imagen actualmente visible en el carrusel modal. */
   let carouselIndex = 0;
 
-  /** Nodos del DOM usados por la galería y el modal. */
   const images = Array.from(document.querySelectorAll('.post-image')) as HTMLElement[];
   const carouselModal = document.getElementById('carousel-modal')!;
   const carouselImage = document.getElementById('carousel-image') as HTMLImageElement;
@@ -126,7 +106,6 @@ const baseUrl = import.meta.env.BASE_URL;
     });
   }
 
-  /** Abre el modal y muestra la imagen según `carouselIndex`. */
   function openCarousel() {
     const img = images[carouselIndex].querySelector('img') as HTMLImageElement;
     carouselImage.src = img.src;
@@ -136,14 +115,12 @@ const baseUrl = import.meta.env.BASE_URL;
     document.body.style.overflow = 'hidden';
   }
 
-  /** Cierra el modal y restaura el scroll del body. */
   function closeCarousel() {
     carouselModal.classList.add('hidden');
     carouselModal.classList.remove('flex');
     document.body.style.overflow = '';
   }
 
-  /** Avanza al siguiente proyecto (circular). */
   function nextImage() {
     carouselIndex = (carouselIndex + 1) % images.length;
     const img = images[carouselIndex].querySelector('img') as HTMLImageElement;
@@ -151,7 +128,6 @@ const baseUrl = import.meta.env.BASE_URL;
     carouselCounter.textContent = `${carouselIndex + 1} / ${images.length}`;
   }
 
-  /** Retrocede al proyecto anterior (circular). */
   function prevImage() {
     carouselIndex = (carouselIndex - 1 + images.length) % images.length;
     const img = images[carouselIndex].querySelector('img') as HTMLImageElement;
