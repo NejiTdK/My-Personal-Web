@@ -11,16 +11,20 @@ const profileData = [
   { label: 'ROL', value: 'Desarrollador Front-end' },
   { label: 'EDAD', value: '23 años' },
   { label: 'FORMACIÓN', value: 'Ing. Sistemas' },
-  { label: 'ESTADO', value: 'Aprendiendo' },
+  { label: 'ESTADO', value: 'Construyendo' },
 ];
 
-const bioText = `Hola, soy Alec y estoy muy entusiasmado con el futuro del desarrollo, particularmente con el impacto de la IA. Tengo 23 años y vengo de una formación en Ingeniería en Sistemas, aunque todavía estoy construyendo mi experiencia profesional en el campo.
+const bioParagraphs = [
+  `Hola, soy Alec y estoy muy entusiasmado con el futuro del desarrollo, particularmente con el impacto de la IA. Tengo 23 años y vengo de una formación en Ingeniería en Sistemas, aunque todavía estoy construyendo mi experiencia profesional en el campo.`,
+  `Actualmente, me identifico como desarrollador JR – me encanta la creatividad y el desafío de transformar ideas en soluciones tangibles. Lo que me motiva es usar la IA y los agentes de manera estratégica para crear proyectos innovadores.`,
+  `Aunque me considero con buenas bases, estoy siendo muy consciente de que la IA y el desarrollo son campos que evolucionan a una velocidad increíble. Estoy en una fase de aprendizaje intenso, y estoy particularmente enfocado en refinar mis habilidades y la ejecución de mis proyectos.`,
+  `Soy una persona analítica, perfeccionista y muy metódica. Antes de comenzar a construir, me gusta investigar, absorber información y buscar la inspiración que impulsará la idea. Sé que tengo mucho por aprender, pero estoy muy motivado para seguir creciendo y contribuir con mi enfoque y atención al detalle.`,
+];
 
-Actualmente, me identifico como desarrollador JR – me encanta la creatividad y el desafío de transformar ideas en soluciones tangibles. Lo que me motiva es usar la IA y los agentes de manera estratégica para crear proyectos innovadores.
-
-Aunque me considero con buenas bases, estoy siendo muy consciente de que la IA y el desarrollo son campos que evolucionan a una velocidad increíble. Estoy en una fase de aprendizaje intenso, y estoy particularmente enfocado en refinar mis habilidades y la ejecución de mis proyectos.
-
-Soy una persona analítica, perfeccionista y muy metódica. Antes de comenzar a construir, me gusta investigar, absorber información y buscar la inspiración que impulsará la idea. Sé que tengo mucho por aprender, pero estoy muy motivado para seguir creciendo y contribuir con mi enfoque y atención al detalle.`;
+const allCards = [
+  { type: 'profile', data: profileData },
+  ...bioParagraphs.map((text, i) => ({ type: 'bio', data: text, index: i + 1 }))
+];
 ---
 
 <section id="sobre-mi" class="py-12 sm:py-20 px-3 sm:px-4 relative">
@@ -33,41 +37,93 @@ Soy una persona analítica, perfeccionista y muy metódica. Antes de comenzar a 
       </h2>
     </div>
 
-    <!-- Panel estilo consola/terminal -->
-    <div class="bg-[#0a0a0a] border-2 border-[#00E5FF] p-1" style="box-shadow: 4px 4px 0 #00E5FF;">
-      <div class="bg-[#000000] p-4 sm:p-6 md:p-8">
-        <!-- Header con botón expandir -->
-        <div class="flex items-center justify-between mb-4 sm:mb-6 border-b border-[#333] pb-3 sm:pb-4">
-          <div class="flex items-center gap-2 sm:gap-3">
-            <span class="text-[#00E5FF]">▶</span>
-            <h3 class="font-pixel text-xs text-[#00E5FF]">PERFIL</h3>
-          </div>
-          <button class="w-6 h-6 border border-[#00E5FF] flex items-center justify-center text-[#00E5FF] hover:bg-[#FFE500] hover:text-[#000000] transition-colors font-pixel">
-            +
-          </button>
-        </div>
-
-        <!-- Tabla de datos estilo terminal - stack en móvil -->
-        <div class="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
-          {profileData.map((item) => (
-            <div class="flex flex-col sm:flex-row sm:items-center sm:gap-2 font-pixel text-[10px] sm:text-xs">
-              <span class="text-[#00E5FF] sm:w-24 flex-shrink-0">{item.label}:</span>
-              <span class="text-[#FFFFFF]">{item.value}</span>
-            </div>
-          ))}
-        </div>
-
-        <!-- Bio con shimmer -->
-        <div class="pt-3 sm:pt-4 border-t border-[#333]">
-          <div class="bio-shimmer space-y-2 sm:space-y-3">
-            {bioText.split('\n\n').map((paragraph) => (
-              <p class="font-pixel text-[10px] sm:text-xs text-[#888888] leading-relaxed">
-                {paragraph.trim()}
+    <!-- Mobile: Grid stack -->
+    <div class="block sm:hidden space-y-4">
+      {allCards.map((card, index) => (
+        <div class="tilt-card bg-[#0a0a0a] border-2 border-[#00E5FF] p-4 w-full mx-auto" style="box-shadow: 4px 4px 0 #00E5FF;">
+          {card.type === 'profile' ? (
+            <>
+              <div class="flex items-center gap-2 mb-3 border-b border-[#333] pb-2">
+                <span class="text-[#00E5FF]">◉</span>
+                <h3 class="font-pixel text-xs text-[#00E5FF]">PERFIL</h3>
+              </div>
+              <div class="space-y-2">
+                {card.data.map((item: any) => (
+                  <div class="flex flex-row items-center gap-2 font-pixel text-[10px]">
+                    <span class="text-[#00E5FF] w-20 flex-shrink-0">{item.label}:</span>
+                    <span class="text-[#FFFFFF]">{item.value}</span>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <>
+              <div class="flex items-center gap-2 mb-3 border-b border-[#333] pb-2">
+                <span class="text-[#FFE500]">♦</span>
+                <span class="font-pixel text-xs text-[#FFE500]">BIO-{card.index}</span>
+              </div>
+              <p class="font-pixel text-[10px] text-[#888888] leading-relaxed">
+                {card.data}
               </p>
-            ))}
-          </div>
+            </>
+          )}
         </div>
+      ))}
+    </div>
+
+    <!-- Desktop: Carrusel horizontal -->
+    <div class="hidden sm:block relative">
+      <div id="carousel-container" class="flex items-center justify-center gap-4 overflow-visible h-[420px]">
+        {allCards.map((card, index) => (
+          <div 
+            class="carousel-card transition-all duration-500"
+            data-index={index}
+          >
+            <div class="tilt-card w-full h-full">
+              {card.type === 'profile' ? (
+                <div class="bg-[#0a0a0a] border-2 border-[#00E5FF] p-4 w-64 overflow-hidden" style="box-shadow: 4px 4px 0 #00E5FF; height: 320px;">
+                  <div class="flex items-center gap-2 mb-3 border-b border-[#333] pb-2">
+                    <span class="text-[#00E5FF]">◉</span>
+                    <h3 class="font-pixel text-xs text-[#00E5FF]">PERFIL</h3>
+                  </div>
+                  <div class="space-y-2">
+                    {card.data.map((item: any) => (
+                      <div class="flex flex-row items-center gap-2 font-pixel text-[10px]">
+                        <span class="text-[#00E5FF] w-20 flex-shrink-0">{item.label}:</span>
+                        <span class="text-[#FFFFFF]">{item.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div class="bg-[#0a0a0a] border-2 border-[#00E5FF] p-4 w-64 overflow-hidden" style="box-shadow: 4px 4px 0 #00E5FF; height: 320px;">
+                  <div class="flex items-center gap-2 mb-3 border-b border-[#333] pb-2">
+                    <span class="text-[#FFE500]">♦</span>
+                    <span class="font-pixel text-xs text-[#FFE500]">BIO-{card.index}</span>
+                  </div>
+                  <p class="font-pixel text-[10px] text-[#888888] leading-relaxed overflow-y-auto h-[220px]">
+                    {card.data}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
       </div>
+
+      <button id="carousel-prev" class="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 bg-[#00E5FF] hover:bg-[#FFE500] transition-colors flex items-center justify-center z-10">
+        <span class="text-[#000000] font-pixel text-sm">◀</span>
+      </button>
+      <button id="carousel-next" class="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 bg-[#00E5FF] hover:bg-[#FFE500] transition-colors flex items-center justify-center z-10">
+        <span class="text-[#000000] font-pixel text-sm">▶</span>
+      </button>
+    </div>
+
+    <!-- Indicador de posición (solo desktop) -->
+    <div class="hidden sm:flex justify-center gap-2 mt-6">
+      {allCards.map((_, index) => (
+        <div class="carousel-dot w-2 h-2 bg-[#333] transition-colors" data-index={index}></div>
+      ))}
     </div>
 
     <div class="mt-6 sm:mt-8 text-center">
@@ -81,13 +137,85 @@ Soy una persona analítica, perfeccionista y muy metódica. Antes de comenzar a 
   </div>
 </section>
 
-<style>
-  .bio-shimmer {
-    animation: shimmer 2s ease-in-out infinite;
+<script>
+  const cards = document.querySelectorAll('.carousel-card') as NodeListOf<HTMLElement>;
+  const dots = document.querySelectorAll('.carousel-dot') as NodeListOf<HTMLElement>;
+  const prevBtn = document.getElementById('carousel-prev');
+  const nextBtn = document.getElementById('carousel-next');
+  
+  let currentIndex = 0;
+  let isAnimating = false;
+
+  function updateCarousel() {
+    cards.forEach((card, index) => {
+      const diff = index - currentIndex;
+      
+      if (diff === 0) {
+        card.style.opacity = '1';
+        card.style.transform = 'scale(1) translateX(0)';
+        card.style.zIndex = '20';
+      } else if (diff === -1 || diff === (cards.length - 1)) {
+        card.style.opacity = '0.6';
+        card.style.transform = 'scale(0.8) translateX(-100%)';
+        card.style.zIndex = '10';
+      } else if (diff === 1 || diff === -(cards.length - 1)) {
+        card.style.opacity = '0.6';
+        card.style.transform = 'scale(0.8) translateX(100%)';
+        card.style.zIndex = '10';
+      } else if (diff === -2 || diff === (cards.length - 2)) {
+        card.style.opacity = '0.3';
+        card.style.transform = 'scale(0.6) translateX(-200%)';
+        card.style.zIndex = '5';
+      } else if (diff === 2 || diff === -(cards.length - 2)) {
+        card.style.opacity = '0.3';
+        card.style.transform = 'scale(0.6) translateX(200%)';
+        card.style.zIndex = '5';
+      } else {
+        card.style.opacity = '0';
+        card.style.transform = 'scale(0.4) translateX(0)';
+        card.style.zIndex = '1';
+      }
+    });
+
+    dots.forEach((dot, index) => {
+      dot.classList.toggle('bg-[#00E5FF]', index === currentIndex);
+      dot.classList.toggle('bg-[#333]', index !== currentIndex);
+    });
   }
 
-  @keyframes shimmer {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
+  function goToNext() {
+    if (isAnimating) return;
+    isAnimating = true;
+    currentIndex = (currentIndex + 1) % cards.length;
+    updateCarousel();
+    setTimeout(() => { isAnimating = false; }, 500);
+  }
+
+  function goToPrev() {
+    if (isAnimating) return;
+    isAnimating = true;
+    currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+    updateCarousel();
+    setTimeout(() => { isAnimating = false; }, 500);
+  }
+
+  prevBtn?.addEventListener('click', goToPrev);
+  nextBtn?.addEventListener('click', goToNext);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') goToPrev();
+    if (e.key === 'ArrowRight') goToNext();
+  });
+
+  updateCarousel();
+</script>
+
+<style>
+  .carousel-card {
+    position: absolute;
+    width: 100%;
+    max-width: 16rem;
+    cursor: pointer;
+    will-change: transform, opacity;
   }
 </style>
