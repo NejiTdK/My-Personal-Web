@@ -27,9 +27,9 @@ const allCards = [
 ];
 ---
 
-<section id="sobre-mi" class="py-12 sm:py-20 px-3 sm:px-4 relative">
-  <div class="max-w-4xl mx-auto">
-    <div class="text-center mb-8 sm:mb-12">
+<section id="sobre-mi" class="py-8 sm:py-12 px-3 sm:px-4 relative">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-6 sm:mb-8">
       <h2 class="font-pixel text-lg sm:text-xl md:text-2xl text-[#FFFFFF] inline-block relative">
         <span class="absolute -left-4 sm:-left-6 top-1/2 -translate-y-1/2 text-[#00E5FF]">▶</span>
         SOBRE MÍ
@@ -38,19 +38,19 @@ const allCards = [
     </div>
 
     <!-- Mobile: Grid stack -->
-    <div class="block sm:hidden space-y-4">
+    <div class="block sm:hidden space-y-3">
       {allCards.map((card, index) => (
         <div class="tilt-card bg-[#0a0a0a] border-2 border-[#00E5FF] p-4 w-full mx-auto" style="box-shadow: 4px 4px 0 #00E5FF;">
           {card.type === 'profile' ? (
             <>
               <div class="flex items-center gap-2 mb-3 border-b border-[#333] pb-2">
                 <span class="text-[#00E5FF]">◉</span>
-                <h3 class="font-pixel text-xs text-[#00E5FF]">PERFIL</h3>
+                <h3 class="font-pixel text-sm text-[#00E5FF]">PERFIL</h3>
               </div>
               <div class="space-y-2">
                 {card.data.map((item: any) => (
-                  <div class="flex flex-row items-center gap-2 font-pixel text-[10px]">
-                    <span class="text-[#00E5FF] w-20 flex-shrink-0">{item.label}:</span>
+                  <div class="flex flex-row items-center gap-2 font-pixel text-xs">
+                    <span class="text-[#00E5FF] w-24 flex-shrink-0">{item.label}:</span>
                     <span class="text-[#FFFFFF]">{item.value}</span>
                   </div>
                 ))}
@@ -60,9 +60,9 @@ const allCards = [
             <>
               <div class="flex items-center gap-2 mb-3 border-b border-[#333] pb-2">
                 <span class="text-[#FFE500]">♦</span>
-                <span class="font-pixel text-xs text-[#FFE500]">BIO-{card.index}</span>
+                <span class="font-pixel text-sm text-[#FFE500]">BIO-{card.index}</span>
               </div>
-              <p class="font-pixel text-[10px] text-[#888888] leading-relaxed">
+              <p class="font-pixel text-xs text-[#888888] leading-relaxed">
                 {card.data}
               </p>
             </>
@@ -73,35 +73,35 @@ const allCards = [
 
     <!-- Desktop: Carrusel horizontal -->
     <div class="hidden sm:block relative">
-      <div id="carousel-container" class="flex items-center justify-center gap-4 overflow-visible h-[420px]">
+      <div id="carousel-container" class="flex items-center justify-center gap-4 overflow-visible h-[450px]">
         {allCards.map((card, index) => (
-          <div 
+          <div
             class="carousel-card transition-all duration-500"
             data-index={index}
           >
             <div class="tilt-card w-full h-full">
               {card.type === 'profile' ? (
-                <div class="bg-[#0a0a0a] border-2 border-[#00E5FF] p-4 w-64 overflow-hidden" style="box-shadow: 4px 4px 0 #00E5FF; height: 320px;">
-                  <div class="flex items-center gap-2 mb-3 border-b border-[#333] pb-2">
+                <div class="bg-[#0a0a0a] border-2 border-[#00E5FF] p-5 w-80 overflow-hidden" style="box-shadow: 4px 4px 0 #00E5FF; height: 380px;">
+                  <div class="flex items-center gap-2 mb-4 border-b border-[#333] pb-3">
                     <span class="text-[#00E5FF]">◉</span>
-                    <h3 class="font-pixel text-xs text-[#00E5FF]">PERFIL</h3>
+                    <h3 class="font-pixel text-sm text-[#00E5FF]">PERFIL</h3>
                   </div>
-                  <div class="space-y-2">
+                  <div class="space-y-3">
                     {card.data.map((item: any) => (
-                      <div class="flex flex-row items-center gap-2 font-pixel text-[10px]">
-                        <span class="text-[#00E5FF] w-20 flex-shrink-0">{item.label}:</span>
+                      <div class="flex flex-row items-center gap-2 font-pixel text-xs">
+                        <span class="text-[#00E5FF] w-24 flex-shrink-0">{item.label}:</span>
                         <span class="text-[#FFFFFF]">{item.value}</span>
                       </div>
                     ))}
                   </div>
                 </div>
               ) : (
-                <div class="bg-[#0a0a0a] border-2 border-[#00E5FF] p-4 w-64 overflow-hidden" style="box-shadow: 4px 4px 0 #00E5FF; height: 320px;">
-                  <div class="flex items-center gap-2 mb-3 border-b border-[#333] pb-2">
+                <div class="bg-[#0a0a0a] border-2 border-[#00E5FF] p-5 w-80 overflow-hidden" style="box-shadow: 4px 4px 0 #00E5FF; height: 380px;">
+                  <div class="flex items-center gap-2 mb-4 border-b border-[#333] pb-3">
                     <span class="text-[#FFE500]">♦</span>
-                    <span class="font-pixel text-xs text-[#FFE500]">BIO-{card.index}</span>
+                    <span class="font-pixel text-sm text-[#FFE500]">BIO-{card.index}</span>
                   </div>
-                  <p class="font-pixel text-[10px] text-[#888888] leading-relaxed overflow-y-auto h-[220px]">
+                  <p class="font-pixel text-sm text-[#888888] leading-relaxed overflow-y-auto h-[280px]">
                     {card.data}
                   </p>
                 </div>
@@ -111,10 +111,10 @@ const allCards = [
         ))}
       </div>
 
-      <button id="carousel-prev" class="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 bg-[#00E5FF] hover:bg-[#FFE500] transition-colors flex items-center justify-center z-10">
+      <button id="carousel-prev" class="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-[#00E5FF] hover:bg-[#FFE500] transition-colors flex items-center justify-center z-10">
         <span class="text-[#000000] font-pixel text-sm">◀</span>
       </button>
-      <button id="carousel-next" class="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 bg-[#00E5FF] hover:bg-[#FFE500] transition-colors flex items-center justify-center z-10">
+      <button id="carousel-next" class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-[#00E5FF] hover:bg-[#FFE500] transition-colors flex items-center justify-center z-10">
         <span class="text-[#000000] font-pixel text-sm">▶</span>
       </button>
     </div>
@@ -126,7 +126,7 @@ const allCards = [
       ))}
     </div>
 
-    <div class="mt-6 sm:mt-8 text-center">
+    <div class="mt-4 sm:mt-6 text-center">
       <a
         href={`${baseUrl}proyectos/`}
         class="inline-block px-6 sm:px-8 py-3 sm:py-4 bg-[#00E5FF] hover:bg-[#FFE500] transition-colors font-pixel text-xs sm:text-sm text-[#000000]"
@@ -214,7 +214,7 @@ const allCards = [
   .carousel-card {
     position: absolute;
     width: 100%;
-    max-width: 16rem;
+    max-width: 20rem;
     cursor: pointer;
     will-change: transform, opacity;
   }
