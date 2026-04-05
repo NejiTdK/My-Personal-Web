@@ -1,19 +1,36 @@
 ---
 /**
  * Página de proyectos del portafolio AlecDev.
- * Muestra un grid de proyectos (actualmente vacío) con lightbox integrado.
+ * Muestra un grid de proyectos con tarjetas estilo pixel art,
+ * imágenes scrollables y carrusel para múltiples imágenes.
  */
 import Layout from '../layouts/Layout.astro';
 import PixelNav from '../components/PixelNav.astro';
 import Footer from '../components/Footer.astro';
+import ScrollableImage from '../components/ScrollableImage.astro';
+import TechIcon from '../components/TechIcon.astro';
 
-interface Post {
-  src: string;
+interface Project {
+  id: string;
+  title: string;
   description: string;
+  year: string;
+  technologies: Array<'html' | 'css' | 'js' | 'postcss'>;
+  images: string[];
 }
 
-// Array de proyectos (se llenará dinámicamente)
-const posts: Post[] = [];
+// Array de proyectos
+const projects: Project[] = [
+  {
+    id: 'prototipo-landing',
+    title: 'Prototipo Landing',
+    description: 'Prototipado de landing page construida para una constructora.',
+    year: '2026',
+    technologies: ['html', 'css', 'js'],
+    images: ['/myresources/proyecto-a-large.webp']
+  }
+];
+
 const baseUrl = import.meta.env.BASE_URL;
 ---
 
@@ -32,34 +49,108 @@ const baseUrl = import.meta.env.BASE_URL;
           </p>
         </div>
 
-        {posts.length === 0 ? (
+        {projects.length === 0 ? (
           <div class="text-center py-16 sm:py-20">
             <p class="font-pixel text-xs sm:text-sm text-[#888888]">
               Sin proyectos aún
             </p>
           </div>
         ) : (
-          <div class="space-y-4 sm:space-y-6">
-            {posts.map((post, index) => (
-              <article class="bg-[#0a0a0a] border-2 border-[#00E5FF] overflow-hidden" style="box-shadow: 4px 4px 0 #00E5FF;">
+          <div class="space-y-6 sm:space-y-8">
+            {projects.map((project, projectIndex) => (
+              <article 
+                class="bg-[#0a0a0a] border-2 border-[#00E5FF] overflow-hidden project-card" 
+                style="box-shadow: 4px 4px 0 #00E5FF;"
+                data-project-id={project.id}
+              >
+                {/* Header con título del proyecto */}
                 <div class="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 border-b border-[#333]">
                   <div class="w-8 h-8 border-2 border-[#00E5FF] overflow-hidden flex-shrink-0">
                     <img src={`${baseUrl}logo.png`} alt="AlecDev" class="w-full h-full object-contain" />
                   </div>
                   <div class="flex-1 min-w-0">
-                    <p class="font-pixel text-xs text-[#FFFFFF]">ALEC<span class="text-[#00E5FF]">DEV</span></p>
+                    <p class="font-pixel text-xs text-[#FFFFFF] truncate">
+                      {project.title.toUpperCase()}
+                    </p>
                   </div>
                 </div>
 
-                <div class="max-h-64 sm:max-h-80 md:max-h-96 bg-[#0a0a0a] cursor-pointer post-image overflow-hidden" data-index={index}>
-                  <img src={post.src} alt="" class="w-full h-full object-contain max-h-full" loading="lazy" />
+                {/* Imagen/es del proyecto */}
+                <div class="relative">
+                  {project.images.length === 1 ? (
+                    /* Una sola imagen - scrollable */
+                    <ScrollableImage 
+                      src={project.images[0]} 
+                      alt={project.title}
+                      height="300px"
+                    />
+                  ) : (
+                    /* Múltiples imágenes - carrusel */
+                    <div class="relative">
+                      <div class="project-carousel overflow-hidden" data-project-index={projectIndex}>
+                        <div class="carousel-track flex transition-transform duration-300">
+                          {project.images.map((image, imgIndex) => (
+                            <div class="w-full flex-shrink-0">
+                              <ScrollableImage 
+                                src={image} 
+                                alt={`${project.title} - ${imgIndex + 1}`}
+                                height="300px"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      {/* Botones de navegación del carrusel */}
+                      <button 
+                        class="carousel-prev absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-[#00E5FF] hover:bg-[#FFE500] transition-colors flex items-center justify-center z-10"
+                        data-project={projectIndex}
+                      >
+                        <span class="font-pixel text-sm text-[#000000]">‹</span>
+                      </button>
+                      <button 
+                        class="carousel-next absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-[#00E5FF] hover:bg-[#FFE500] transition-colors flex items-center justify-center z-10"
+                        data-project={projectIndex}
+                      >
+                        <span class="font-pixel text-sm text-[#000000]">›</span>
+                      </button>
+                      
+                      {/* Indicador de puntos */}
+                      <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                        {project.images.map((_, dotIndex) => (
+                          <button 
+                            class={`w-2 h-2 rounded-full transition-colors carousel-dot ${dotIndex === 0 ? 'bg-[#00E5FF]' : 'bg-[#333]'}`}
+                            data-project={projectIndex}
+                            data-index={dotIndex}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
-                <div class="px-3 sm:px-4 py-2 sm:py-3">
-                  <p class="font-pixel text-[10px] sm:text-xs text-[#888888] leading-relaxed">
-                    <span class="text-[#FFFFFF] mr-2">ALEC<span class="text-[#00E5FF]">DEV</span></span>
-                    {post.description}
+                {/* Información del proyecto */}
+                <div class="px-3 sm:px-4 py-3 sm:py-4 border-t border-[#333]">
+                  {/* Descripción */}
+                  <p class="font-pixel text-[10px] sm:text-xs text-[#888888] leading-relaxed mb-3">
+                    {project.description}
                   </p>
+                  
+                  {/* Año */}
+                  <div class="flex items-center gap-2 mb-3">
+                    <span class="font-pixel text-[8px] sm:text-[10px] text-[#00E5FF]">AÑO:</span>
+                    <span class="font-pixel text-[8px] sm:text-[10px] text-[#FFFFFF]">{project.year}</span>
+                  </div>
+                  
+                  {/* Tecnologías con iconos pixel */}
+                  <div class="flex items-center gap-2">
+                    <span class="font-pixel text-[8px] sm:text-[10px] text-[#00E5FF]">TECH:</span>
+                    <div class="flex gap-2">
+                      {project.technologies.map((tech) => (
+                        <TechIcon tech={tech} size="md" />
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </article>
             ))}
@@ -69,95 +160,81 @@ const baseUrl = import.meta.env.BASE_URL;
     </section>
   </main>
 
-  <div id="carousel-modal" class="fixed inset-0 bg-black/95 z-50 hidden flex items-center justify-center p-2">
-    <button id="carousel-close" class="absolute top-2 sm:top-4 right-2 sm:right-4 w-10 sm:w-12 h-10 sm:h-12 bg-[#00E5FF] hover:bg-[#FFE500] transition-colors font-pixel text-lg sm:text-xl flex items-center justify-center text-[#000000] z-10">
-      ×
-    </button>
-    
-    <button id="carousel-prev" class="absolute left-2 sm:left-4 w-10 sm:w-12 h-10 sm:h-12 bg-[#00E5FF] hover:bg-[#FFE500] transition-colors font-pixel text-lg sm:text-xl flex items-center justify-center text-[#000000]">
-      ‹
-    </button>
-    
-    <button id="carousel-next" class="absolute right-2 sm:right-4 w-10 sm:w-12 h-10 sm:h-12 bg-[#00E5FF] hover:bg-[#FFE500] transition-colors font-pixel text-lg sm:text-xl flex items-center justify-center text-[#000000]">
-      ›
-    </button>
-
-    <div class="max-w-full max-h-[80vh] relative px-8 sm:px-16">
-      <img id="carousel-image" src="" alt="" class="max-w-full max-h-[70vh] sm:max-h-[80vh] object-contain" />
-      
-      <div id="carousel-counter" class="absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 bg-black/50 px-3 sm:px-4 py-1 sm:py-2 font-pixel text-[10px] sm:text-xs text-[#FFFFFF]">
-        1 / 1
-      </div>
-    </div>
-  </div>
-
   <Footer />
 </Layout>
 
 <script>
   /**
-   * Lightbox/Carrusel para visualizar imágenes de proyectos en pantalla completa.
-   * Se activa al hacer click en cualquier imagen del grid.
+   * Script para manejar el carrusel de imágenes cuando hay múltiples.
+   * Incluye navegación por botones, indicadores de puntos y teclado.
    */
-  let carouselIndex = 0;  // Índice de la imagen actual
-
-  // Elementos del DOM
-  const images = Array.from(document.querySelectorAll('.post-image')) as HTMLElement[];
-  const carouselModal = document.getElementById('carousel-modal')!;
-  const carouselImage = document.getElementById('carousel-image') as HTMLImageElement;
-  const carouselCounter = document.getElementById('carousel-counter')!;
-
-  // Asignar click handlers a cada imagen del grid
-  if (images.length > 0) {
-    images.forEach(item => {
-      item.addEventListener('click', () => {
-        carouselIndex = parseInt(item.getAttribute('data-index')!);
-        openCarousel();
+  document.addEventListener('DOMContentLoaded', () => {
+    const carousels = document.querySelectorAll('.project-carousel');
+    
+    carousels.forEach((carousel) => {
+      const projectIndex = carousel.getAttribute('data-project-index');
+      const track = carousel.querySelector('.carousel-track') as HTMLElement;
+      const dots = document.querySelectorAll(`.carousel-dot[data-project="${projectIndex}"]`);
+      const prevBtn = document.querySelector(`.carousel-prev[data-project="${projectIndex}"]`);
+      const nextBtn = document.querySelector(`.carousel-next[data-project="${projectIndex}"]`);
+      
+      if (!track) return;
+      
+      const slides = track.children;
+      const totalSlides = slides.length;
+      let currentSlide = 0;
+      
+      function updateCarousel() {
+        track.style.transform = `translateX(-${currentSlide * 100}%)`;
+        
+        // Actualizar dots
+        dots.forEach((dot, index) => {
+          dot.classList.toggle('bg-[#00E5FF]', index === currentSlide);
+          dot.classList.toggle('bg-[#333]', index !== currentSlide);
+        });
+      }
+      
+      function goToSlide(index: number) {
+        currentSlide = index;
+        if (currentSlide < 0) currentSlide = totalSlides - 1;
+        if (currentSlide >= totalSlides) currentSlide = 0;
+        updateCarousel();
+      }
+      
+      // Event listeners para botones
+      prevBtn?.addEventListener('click', () => goToSlide(currentSlide - 1));
+      nextBtn?.addEventListener('click', () => goToSlide(currentSlide + 1));
+      
+      // Event listeners para dots
+      dots.forEach((dot) => {
+        dot.addEventListener('click', () => {
+          const index = parseInt(dot.getAttribute('data-index') || '0');
+          goToSlide(index);
+        });
+      });
+      
+      // Navegación con teclado
+      carousel.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') goToSlide(currentSlide - 1);
+        if (e.key === 'ArrowRight') goToSlide(currentSlide + 1);
       });
     });
-  }
-
-  /** Muestra el modal con la imagen seleccionada y bloquea scroll del body */
-  function openCarousel() {
-    const img = images[carouselIndex].querySelector('img') as HTMLImageElement;
-    carouselImage.src = img.src;
-    carouselCounter.textContent = `${carouselIndex + 1} / ${images.length}`;
-    carouselModal.classList.remove('hidden');
-    carouselModal.classList.add('flex');
-    document.body.style.overflow = 'hidden';
-  }
-
-  /** Oculta el modal y restaura el scroll del body */
-  function closeCarousel() {
-    carouselModal.classList.add('hidden');
-    carouselModal.classList.remove('flex');
-    document.body.style.overflow = '';
-  }
-
-  /** Avanza a la siguiente imagen (circular) */
-  function nextImage() {
-    carouselIndex = (carouselIndex + 1) % images.length;
-    const img = images[carouselIndex].querySelector('img') as HTMLImageElement;
-    carouselImage.src = img.src;
-    carouselCounter.textContent = `${carouselIndex + 1} / ${images.length}`;
-  }
-
-  /** Retrocede a la imagen anterior (circular) */
-  function prevImage() {
-    carouselIndex = (carouselIndex - 1 + images.length) % images.length;
-    const img = images[carouselIndex].querySelector('img') as HTMLImageElement;
-    carouselImage.src = img.src;
-    carouselCounter.textContent = `${carouselIndex + 1} / ${images.length}`;
-  }
-
-  document.getElementById('carousel-close')?.addEventListener('click', closeCarousel);
-  document.getElementById('carousel-next')?.addEventListener('click', nextImage);
-  document.getElementById('carousel-prev')?.addEventListener('click', prevImage);
-  carouselModal?.addEventListener('click', (e) => { if (e.target === carouselModal) closeCarousel(); });
-  document.addEventListener('keydown', (e) => {
-    if (carouselModal.classList.contains('hidden')) return;
-    if (e.key === 'Escape') closeCarousel();
-    if (e.key === 'ArrowRight') nextImage();
-    if (e.key === 'ArrowLeft') prevImage();
   });
 </script>
+
+<style>
+  /* Estilos adicionales para el carrusel */
+  .carousel-track {
+    display: flex;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .carousel-dot {
+    cursor: pointer;
+  }
+  
+  .carousel-dot:hover {
+    background-color: #00E5FF !important;
+    opacity: 0.7;
+  }
+</style>

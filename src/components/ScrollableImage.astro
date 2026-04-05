@@ -1,0 +1,84 @@
+---
+/**
+ * Componente de imagen scrollable vertical.
+ * Ideal para mostrar capturas largas de páginas web.
+ * Muestra indicador sutil de scroll cuando hay contenido oculto.
+ */
+export interface ScrollableImageProps {
+  src: string;
+  alt: string;
+  height?: string;
+}
+
+const { src, alt, height = '300px' } = Astro.props;
+---
+
+<div 
+  class="relative overflow-hidden border-2 border-[#00E5FF] bg-[#0a0a0a]" 
+  style={`box-shadow: 4px 4px 0 #00E5FF;`}
+>
+  {/* Contenedor con altura fija y scroll */}
+  <div 
+    class="overflow-y-auto scrollbar-thin project-scroll-container"
+    style={`height: ${height};`}
+  >
+    <img 
+      src={src} 
+      alt={alt}
+      class="w-full object-contain"
+      style="image-rendering: auto;"
+      loading="lazy"
+    />
+  </div>
+  
+  {/* Indicador de scroll sutil */}
+  <div class="absolute bottom-2 left-1/2 -translate-x-1/2 bg-[#0a0a0a]/90 border border-[#00E5FF] px-2 py-1 flex items-center gap-1 pointer-events-none scroll-indicator opacity-100 transition-opacity duration-300">
+    <span class="font-pixel text-[8px] text-[#00E5FF]">▼</span>
+    <span class="font-pixel text-[8px] text-[#888888]">SCROLL</span>
+  </div>
+</div>
+
+<style>
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: #0a0a0a;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: #00E5FF;
+    border-radius: 0;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: #FFE500;
+  }
+  
+  /* Ocultar indicador cuando se hace scroll */
+  .project-scroll-container:hover ~ .scroll-indicator,
+  .project-scroll-container:active ~ .scroll-indicator {
+    opacity: 0;
+  }
+</style>
+
+<script>
+  /**
+   * Script para manejar el indicador de scroll.
+   * Oculta el indicador cuando el usuario hace scroll.
+   */
+  document.querySelectorAll('.project-scroll-container').forEach(container => {
+    const indicator = container.nextElementSibling as HTMLElement;
+    
+    if (indicator && indicator.classList.contains('scroll-indicator')) {
+      container.addEventListener('scroll', () => {
+        if (container.scrollTop > 20) {
+          indicator.style.opacity = '0';
+        } else {
+          indicator.style.opacity = '1';
+        }
+      });
+    }
+  });
+</script>
