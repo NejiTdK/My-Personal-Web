@@ -1,4 +1,8 @@
 ---
+/**
+ * Página de proyectos del portafolio AlecDev.
+ * Muestra un grid de proyectos (actualmente vacío) con lightbox integrado.
+ */
 import Layout from '../layouts/Layout.astro';
 import PixelNav from '../components/PixelNav.astro';
 import Footer from '../components/Footer.astro';
@@ -8,6 +12,7 @@ interface Post {
   description: string;
 }
 
+// Array de proyectos (se llenará dinámicamente)
 const posts: Post[] = [];
 const baseUrl = import.meta.env.BASE_URL;
 ---
@@ -90,13 +95,19 @@ const baseUrl = import.meta.env.BASE_URL;
 </Layout>
 
 <script>
-  let carouselIndex = 0;
+  /**
+   * Lightbox/Carrusel para visualizar imágenes de proyectos en pantalla completa.
+   * Se activa al hacer click en cualquier imagen del grid.
+   */
+  let carouselIndex = 0;  // Índice de la imagen actual
 
+  // Elementos del DOM
   const images = Array.from(document.querySelectorAll('.post-image')) as HTMLElement[];
   const carouselModal = document.getElementById('carousel-modal')!;
   const carouselImage = document.getElementById('carousel-image') as HTMLImageElement;
   const carouselCounter = document.getElementById('carousel-counter')!;
 
+  // Asignar click handlers a cada imagen del grid
   if (images.length > 0) {
     images.forEach(item => {
       item.addEventListener('click', () => {
@@ -106,6 +117,7 @@ const baseUrl = import.meta.env.BASE_URL;
     });
   }
 
+  /** Muestra el modal con la imagen seleccionada y bloquea scroll del body */
   function openCarousel() {
     const img = images[carouselIndex].querySelector('img') as HTMLImageElement;
     carouselImage.src = img.src;
@@ -115,12 +127,14 @@ const baseUrl = import.meta.env.BASE_URL;
     document.body.style.overflow = 'hidden';
   }
 
+  /** Oculta el modal y restaura el scroll del body */
   function closeCarousel() {
     carouselModal.classList.add('hidden');
     carouselModal.classList.remove('flex');
     document.body.style.overflow = '';
   }
 
+  /** Avanza a la siguiente imagen (circular) */
   function nextImage() {
     carouselIndex = (carouselIndex + 1) % images.length;
     const img = images[carouselIndex].querySelector('img') as HTMLImageElement;
@@ -128,6 +142,7 @@ const baseUrl = import.meta.env.BASE_URL;
     carouselCounter.textContent = `${carouselIndex + 1} / ${images.length}`;
   }
 
+  /** Retrocede a la imagen anterior (circular) */
   function prevImage() {
     carouselIndex = (carouselIndex - 1 + images.length) % images.length;
     const img = images[carouselIndex].querySelector('img') as HTMLImageElement;

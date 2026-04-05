@@ -1,6 +1,12 @@
 ---
+/**
+ * Navegación principal pixelada del sitio.
+ * Aparece fija en la parte superior con estilo retro 8-bit.
+ */
 const isIndex = Astro.url.pathname === import.meta.env.BASE_URL;
 const baseUrl = import.meta.env.BASE_URL;
+
+// Items de navegación con lógica de URLs para index vs otras páginas
 const navItems = [
   { label: 'INICIO', href: baseUrl },
   { label: 'SOBRE MÍ', href: isIndex ? '#sobre-mi' : `${baseUrl}#sobre-mi` },
@@ -8,8 +14,10 @@ const navItems = [
 ];
 ---
 
+<!-- Navegación fija superior con borde pixelado cyan -->
 <nav class="absolute top-2 sm:top-4 left-1/2 -translate-x-1/2 z-50 bg-[#000000] border-2 border-[#00E5FF] px-3 sm:px-6 py-2 sm:py-3" style="border-radius: 2px; box-shadow: 4px 4px 0 #00E5FF;">
   <div class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-8">
+    <!-- Logo + Marca -->
     <a href={baseUrl} class="flex items-center gap-2 sm:gap-3 hover:scale-105 transition-transform">
       <img 
         src={`${baseUrl}logo.png`} 
@@ -21,6 +29,7 @@ const navItems = [
       </span>
     </a>
 
+    <!-- Links de navegación con hover effect -->
     <ul class="flex gap-3 sm:gap-6">
       {navItems.map((item) => (
         <li>
