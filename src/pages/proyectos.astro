@@ -1,36 +1,49 @@
 ---
 /**
  * Página de proyectos del portafolio AlecDev.
- * Muestra un grid de proyectos con tarjetas estilo pixel art,
- * imágenes scrollables y carrusel para múltiples imágenes.
+ * Muestra un grid de proyectos con tarjetas React + Live Preview modal.
+ * 
+ * Cada proyecto puede incluir:
+ * - `id`: identificador único
+ * - `title`: título del proyecto
+ * - `description`: descripción breve
+ * - `year`: año de creación
+ * - `technologies`: array de tecnologías usadas ['html', 'css', 'js', 'postcss', 'react', 'astro']
+ * - `thumbnail`: ruta a la imagen de miniatura (en /public)
+ * - `demoUrl`: ruta al demo HTML (en /public/demos/) - opcional
+ * - `hasDemo`: boolean que habilita el botón de Live Preview - opcional
  */
 import Layout from '../layouts/Layout.astro';
 import PixelNav from '../components/PixelNav.astro';
 import Footer from '../components/Footer.astro';
-import ScrollableImage from '../components/ScrollableImage.astro';
-import TechIcon from '../components/TechIcon.astro';
+import ProjectCard from '../components/ProjectCard';
 
-interface Project {
-  id: string;
-  title: string;
-  description: string;
-  year: string;
-  technologies: Array<'html' | 'css' | 'js' | 'postcss'>;
-  images: string[];
-}
-
-// Array de proyectos
-const projects: Project[] = [
+/** Lista de proyectos del portafolio */
+const projects = [
   {
     id: 'prototipo-landing',
     title: 'Prototipo Landing',
     description: 'Prototipado de landing page construida para una constructora.',
     year: '2026',
     technologies: ['html', 'css', 'js'],
-    images: ['projects/proyecto-a-large.webp']
+    thumbnail: 'projects/proyecto-a-large.webp',
+    demoUrl: 'demos/prototipo-landing/index.html',  // Demo en /public/demos/
+    hasDemo: true  // Habilita el botón de Live Preview
   }
+  // Para añadir más proyectos:
+  // {
+  //   id: 'mi-proyecto',
+  //   title: 'Mi Proyecto',
+  //   description: 'Descripción del proyecto...',
+  //   year: '2026',
+  //   technologies: ['html', 'css', 'js', 'react'],
+  //   thumbnail: 'projects/mi-thumb.webp',
+  //   demoUrl: 'demos/mi-proyecto/index.html',
+  //   hasDemo: true
+  // }
 ];
 
+/** URL base del sitio (importante para GitHub Pages) */
 const baseUrl = import.meta.env.BASE_URL;
 ---
 
@@ -57,102 +70,12 @@ const baseUrl = import.meta.env.BASE_URL;
           </div>
         ) : (
           <div class="space-y-6 sm:space-y-8">
-            {projects.map((project, projectIndex) => (
-              <article 
-                class="bg-[#0a0a0a] border-2 border-[#00E5FF] overflow-hidden project-card" 
-                style="box-shadow: 4px 4px 0 #00E5FF;"
-                data-project-id={project.id}
-              >
-                {/* Header con título del proyecto */}
-                <div class="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 border-b border-[#333]">
-                  <div class="w-8 h-8 border-2 border-[#00E5FF] overflow-hidden flex-shrink-0">
-                    <img src={`${baseUrl}logo.png`} alt="AlecDev" class="w-full h-full object-contain" />
-                  </div>
-                  <div class="flex-1 min-w-0">
-                    <p class="font-pixel text-xs text-[#FFFFFF] truncate">
-                      {project.title.toUpperCase()}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Imagen/es del proyecto */}
-                <div class="relative">
-                  {project.images.length === 1 ? (
-                    /* Una sola imagen - scrollable */
-                    <ScrollableImage 
-                      src={project.images[0]} 
-                      alt={project.title}
-                      height="300px"
-                    />
-                  ) : (
-                    /* Múltiples imágenes - carrusel */
-                    <div class="relative">
-                      <div class="project-carousel overflow-hidden" data-project-index={projectIndex}>
-                        <div class="carousel-track flex transition-transform duration-300">
-                          {project.images.map((image, imgIndex) => (
-                            <div class="w-full flex-shrink-0">
-                              <ScrollableImage 
-                                src={image} 
-                                alt={`${project.title} - ${imgIndex + 1}`}
-                                height="300px"
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                      
-                      {/* Botones de navegación del carrusel */}
-                      <button 
-                        class="carousel-prev absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-[#00E5FF] hover:bg-[#FFE500] transition-colors flex items-center justify-center z-10"
-                        data-project={projectIndex}
-                      >
-                        <span class="font-pixel text-sm text-[#000000]">‹</span>
-                      </button>
-                      <button 
-                        class="carousel-next absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-[#00E5FF] hover:bg-[#FFE500] transition-colors flex items-center justify-center z-10"
-                        data-project={projectIndex}
-                      >
-                        <span class="font-pixel text-sm text-[#000000]">›</span>
-                      </button>
-                      
-                      {/* Indicador de puntos */}
-                      <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-                        {project.images.map((_, dotIndex) => (
-                          <button 
-                            class={`w-2 h-2 rounded-full transition-colors carousel-dot ${dotIndex === 0 ? 'bg-[#00E5FF]' : 'bg-[#333]'}`}
-                            data-project={projectIndex}
-                            data-index={dotIndex}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Información del proyecto */}
-                <div class="px-3 sm:px-4 py-3 sm:py-4 border-t border-[#333]">
-                  {/* Descripción */}
-                  <p class="font-pixel text-[10px] sm:text-xs text-[#888888] leading-relaxed mb-3">
-                    {project.description}
-                  </p>
-                  
-                  {/* Año */}
-                  <div class="flex items-center gap-2 mb-3">
-                    <span class="font-pixel text-[8px] sm:text-[10px] text-[#00E5FF]">AÑO:</span>
-                    <span class="font-pixel text-[8px] sm:text-[10px] text-[#FFFFFF]">{project.year}</span>
-                  </div>
-                  
-                  {/* Tecnologías con iconos pixel */}
-                  <div class="flex items-center gap-2">
-                    <span class="font-pixel text-[8px] sm:text-[10px] text-[#00E5FF]">TECH:</span>
-                    <div class="flex gap-2">
-                      {project.technologies.map((tech) => (
-                        <TechIcon tech={tech} size="md" />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </article>
+            {projects.map((project) => (
+              <ProjectCard 
+                client:load 
+                project={project} 
+                baseUrl={baseUrl} 
+              />
             ))}
           </div>
         )}
@@ -162,79 +85,3 @@ const baseUrl = import.meta.env.BASE_URL;
 
   <Footer />
 </Layout>
-
-<script>
-  /**
-   * Script para manejar el carrusel de imágenes cuando hay múltiples.
-   * Incluye navegación por botones, indicadores de puntos y teclado.
-   */
-  document.addEventListener('DOMContentLoaded', () => {
-    const carousels = document.querySelectorAll('.project-carousel');
-    
-    carousels.forEach((carousel) => {
-      const projectIndex = carousel.getAttribute('data-project-index');
-      const track = carousel.querySelector('.carousel-track') as HTMLElement;
-      const dots = document.querySelectorAll(`.carousel-dot[data-project="${projectIndex}"]`);
-      const prevBtn = document.querySelector(`.carousel-prev[data-project="${projectIndex}"]`);
-      const nextBtn = document.querySelector(`.carousel-next[data-project="${projectIndex}"]`);
-      
-      if (!track) return;
-      
-      const slides = track.children;
-      const totalSlides = slides.length;
-      let currentSlide = 0;
-      
-      function updateCarousel() {
-        track.style.transform = `translateX(-${currentSlide * 100}%)`;
-        
-        // Actualizar dots
-        dots.forEach((dot, index) => {
-          dot.classList.toggle('bg-[#00E5FF]', index === currentSlide);
-          dot.classList.toggle('bg-[#333]', index !== currentSlide);
-        });
-      }
-      
-      function goToSlide(index: number) {
-        currentSlide = index;
-        if (currentSlide < 0) currentSlide = totalSlides - 1;
-        if (currentSlide >= totalSlides) currentSlide = 0;
-        updateCarousel();
-      }
-      
-      // Event listeners para botones
-      prevBtn?.addEventListener('click', () => goToSlide(currentSlide - 1));
-      nextBtn?.addEventListener('click', () => goToSlide(currentSlide + 1));
-      
-      // Event listeners para dots
-      dots.forEach((dot) => {
-        dot.addEventListener('click', () => {
-          const index = parseInt(dot.getAttribute('data-index') || '0');
-          goToSlide(index);
-        });
-      });
-      
-      // Navegación con teclado
-      carousel.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowLeft') goToSlide(currentSlide - 1);
-        if (e.key === 'ArrowRight') goToSlide(currentSlide + 1);
-      });
-    });
-  });
-</script>
-
-<style>
-  /* Estilos adicionales para el carrusel */
-  .carousel-track {
-    display: flex;
-    transition: transform 0.3s ease-in-out;
-  }
-  
-  .carousel-dot {
-    cursor: pointer;
-  }
-  
-  .carousel-dot:hover {
-    background-color: #00E5FF !important;
-    opacity: 0.7;
-  }
-</style>

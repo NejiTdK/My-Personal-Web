@@ -1,6 +1,12 @@
 # Documentación del proyecto — Portafolio AlecDev
 
-Sitio estático de portafolio con estética **retro / pixel art** y tipografía **Press Start 2P**. Está construido con **Astro 6** y **Tailwind CSS 4** (integración mediante **Vite**).
+| | |
+|---|---|
+| **Versión** | 1.1.0 |
+| **Última actualización** | 2026-04-11 |
+| **Estado** | Activo |
+
+Sitio estático de portafolio con estética **retro / pixel art** y tipografía **Press Start 2P**. Está construido con **Astro 6** + **React 19** y **Tailwind CSS 4** (integración mediante **Vite**).
 
 ---
 
@@ -18,6 +24,7 @@ Sitio estático de portafolio con estética **retro / pixel art** y tipografía 
 ## Stack tecnológico
 
 - **Astro** (`^6.0.8`): framework para páginas y componentes `.astro` (HTML + islands opcionales).
+- **React** (`^19.x`): componentes interactivos (ProjectCard, ProjectModal, LoadingSpinner).
 - **Tailwind CSS** (`^4.2.2`) + **@tailwindcss/vite** (`^4.2.2`): utilidades CSS y tema; configurados en `astro.config.mjs` como plugin de Vite.
 - **Sin framework UI adicional**: maquetación con clases Tailwind y CSS scoped/global.
 
@@ -42,7 +49,14 @@ Mi Web/
 ├── package.json
 ├── DOCUMENTACION.md      # Este archivo
 ├── public/               # Archivos servidos en la raíz del sitio (URLs estáticas)
-│   └── favicon.svg       # (En el código también se referencia favicon.png y otros assets)
+│   ├── favicon.svg       # Favicon del sitio
+│   ├── logo.png         # Logo del portafolio
+│   ├── icon.webp        # Avatar del héroe
+│   ├── projects/        # Imágenes de proyectos
+│   │   └── proyecto-a-large.webp
+│   └── demos/           # Demos HTML de proyectos (para Live Preview)
+│       └── protipo-landing/
+│           └── index.html
 ├── dist/                 # Salida del build (generada; no editar a mano)
 └── src/
     ├── layouts/
@@ -51,12 +65,15 @@ Mi Web/
     │   ├── index.astro   # Ruta "/"
     │   └── proyectos.astro # Ruta "/proyectos"
     ├── components/
-    │   ├── PixelNav.astro
-    │   ├── HeroSection.astro
-    │   ├── StatsSection.astro
-    │   ├── Footer.astro
-    │   ├── ProjectGallery.astro
-    │   └── LogoCanvas.astro
+    │   ├── PixelNav.astro       # Barra de navegación fija
+    │   ├── HeroSection.astro   # Sección hero con avatar y sprites flotantes
+    │   ├── StatsSection.astro # Sección "Sobre mí" con carrusel 3D
+    │   ├── Footer.astro        # Pie de página
+    │   ├── ScrollableImage.astro  # Imagen con scroll vertical (legacy)
+    │   ├── TechIcon.astro         # Iconos pixel de tecnologías (legacy)
+    │   ├── ProjectCard.tsx        # Tarjeta de proyecto (React)
+    │   ├── ProjectModal.tsx      # Modal de Live Preview (React)
+    │   └── LoadingSpinner.tsx   # Spinner de carga (React)
     └── styles/
         └── global.css    # Tailwind, variables, animaciones y utilidades globales
 ```
@@ -67,8 +84,8 @@ Mi Web/
 
 | Ruta | Archivo | Contenido |
 |------|---------|-----------|
-| `/` | `src/pages/index.astro` | Navegación, héroe (presentación), sección “Sobre mí” RPG, pie. |
-| `/proyectos` | `src/pages/proyectos.astro` | Listado de proyectos (actualmente vacío), modal carrusel para imágenes cuando hay datos. |
+| `/` | `src/pages/index.astro` | Navegación, héroe (presentación), sección "Sobre mí" con carrusel 3D, pie. |
+| `/proyectos` | `src/pages/proyectos.astro` | Grid de proyectos con tarjetas React, Live Preview modal para demos. |
 
 El **file-based routing** de Astro convierte cada archivo en `src/pages/` en una URL.
 
@@ -93,31 +110,92 @@ Barra **fija** superior con logo, marca **ALECDEV** y enlaces:
 
 ### `HeroSection.astro`
 
-Sección **pantalla completa** (`#inicio`): fondo `/background.png`, logo `/logo.png`, título, rol, tagline, botón a `#sobre-mi`, indicador de scroll. Usa clases globales como `scanlines`, `crt-flicker`, `float-animation`.
+Sección **pantalla completa** (`#inicio`): avatar `/icon.webp`, título, rol, tagline, botón a `#sobre-mi`, indicador de scroll y **sprites flotantes** de tecnologías (HTML, CSS, JS, Astro, React, MySQL) con animaciones.
 
 ### `StatsSection.astro`
 
-Sección **`#sobre-mi`**: ficha estilo videojuego con HP (corazones), MP (diamantes), biografía en párrafos, barra EXP, habilidades con porcentajes y enlace a `/proyectos`. Incluye estilos scoped (corazones, diamantes, barras) y un script que resalta barras al hover.
+Sección **`#sobre-mi`** con dos layouts:
+
+- **Mobile**: grid de tarjetas apiladas (perfil + bios)
+- **Desktop**: **carrusel 3D** con efecto de profundidad (escala, opacidad, posición)
+
+Incluye script con navegación por botones y teclado (flechas).
 
 ### `Footer.astro`
 
-Pie con copyright **2026**, estado “READY TO WORK”, versión **v1.0.0**, mensaje “Hecho con ♥ y código” y franja decorativa de cuadrados animados.
+Pie con copyright **2026**, estado "READY TO WORK", versión **v1.0.0**, mensaje "Hecho con ♥ y código" y franja decorativa de cuadrados animados (pulse-glow).
 
-### `ProjectGallery.astro`
+### `ScrollableImage.astro` *(legacy)*
 
-Bloque de **preview** con título PROYECTOS y botón a `/proyectos`. **No está importado** en `index.astro` en el estado actual del repo; está listo para insertarse si se desea esa sección en la home.
+Componente de imagen con scroll vertical. Muestra indicador "SCROLL" que se oculta al hacer hover. Útil para capturas largas.
 
-### `LogoCanvas.astro`
+### `TechIcon.astro` *(legacy)*
 
-Renderiza el logo en un **canvas** a partir de una cadena ASCII y una paleta de colores. **No está importado** en ninguna página actualmente; alternativa programática a `/logo.png`.
+Iconos SVG pixel art para tecnologías: HTML, CSS, JS, PostCSS. Tamaños: `sm`, `md`, `lg`.
+
+### `ProjectCard.tsx` *(React)*
+
+Tarjeta de proyecto con:
+
+- Header con logo y título
+- Miniatura con overlay de **Live Preview** (si `hasDemo: true`)
+- Descripción, año y tecnologías
+- **Modal integrado** para demos
+
+Se usa con `client:load` en `proyectos.astro`.
+
+### `ProjectModal.tsx` *(React)*
+
+Modal fullscreen con iframe para **Live Preview**:
+
+- Estados: loading (spinner), error (retry), listo
+- Cerrar: Escape, click fuera, botón X
+- Accesibilidad: `role="dialog"`, `aria-modal`
+
+### `LoadingSpinner.tsx` *(React)*
+
+Spinner animado estilo 8-bit con 4 esquinas pulsantes y centro amarillo estático.
+
+### `ProjectGallery.astro` *(sin usar)*
+
+Bloque de preview con botón a proyectos. **No está importado** actualmente.
+
+### `LogoCanvas.astro` *(sin usar)*
+
+Renderiza el logo en canvas desde ASCII. **No está importado** actualmente.
 
 ---
 
-## Página de proyectos y carrusel
+## Página de proyectos
 
-- Los proyectos se definen en el array **`posts`** en `proyectos.astro` (`{ src, description }`).
-- Si `posts.length === 0`, se muestra **“Sin proyectos aún”**.
-- Con datos, cada tarjeta tiene imagen clicable (clase **`.post-image`**) que abre un **modal** fullscreen con imagen ampliada, botones anterior/siguiente, cierre y teclado (**Escape**, flechas).
+### Estructura de datos
+
+Los proyectos se definen en el array **`projects`** en `proyectos.astro`:
+
+```ts
+interface Project {
+  id: string;           // Identificador único
+  title: string;        // Título del proyecto
+  description: string;  // Descripción breve
+  year: string;         // Año de creación
+  technologies: string[]; // ['html', 'css', 'js', 'react', 'astro']
+  thumbnail: string;   // Ruta a imagen (en /public)
+  demoUrl?: string;     // Ruta al demo HTML (en /public/demos/)
+  hasDemo?: boolean;    // Habilita botón Live Preview
+}
+```
+
+### Live Preview
+
+Si un proyecto tiene `hasDemo: true` y `demoUrl`, al hacer click en la miniatura se abre un **modal con iframe** que carga el demo en vivo. El demo debe ser un archivo HTML autocontenido en `/public/demos/`.
+
+Si no hay proyectos (`projects.length === 0`), se muestra "Sin proyectos aún".
+
+### Componentes React
+
+- **`ProjectCard.tsx`**: Renderiza cada tarjeta. Usa `client:load` para hydrate en cliente.
+- **`ProjectModal.tsx`**: Modal con iframe, estados de carga/error,retry.
+- **`LoadingSpinner.tsx`**: Spinner pixel art para estados de carga.
 
 ---
 
@@ -125,25 +203,44 @@ Renderiza el logo en un **canvas** a partir de una cadena ASCII y una paleta de 
 
 El código referencia rutas absolutas desde la raíz del sitio:
 
-- `/favicon.png` — configurado en `Layout.astro` (en `public/` puede existir otro favicon; conviene alinear nombre y formato).
-- `/logo.png` — navegación, héroe, stats, tarjetas de proyecto.
-- `/background.png` — fondo del héroe.
+- `/favicon.svg` — configurado en `Layout.astro`
+- `/logo.png` — navegación, tarjetas de proyecto
+- `/icon.webp` — avatar del héroe
+- `/projects/` — miniaturas de proyectos
+- `/demos/` — demos HTML para Live Preview
 
-Asegúrate de que estos archivos existan en **`public/`** para evitar roturas visuales en build y producción.
+### Estructura de demos
+
+Para el Live Preview, coloca el HTML y sus recursos en:
+
+```
+public/demos/[nombre-proyecto]/
+├── index.html
+├── styles.css
+└── script.js
+```
+
+La URL se define en `demoUrl` del proyecto (sin el prefijo `/public/`).
 
 ---
 
 ## Paleta y naming visual
 
-Colores recurrentes en componentes y CSS:
+Colores del tema (definidos en `global.css` con `@theme`):
 
-- **Primario**: `#0D8BDB`
-- **Secundario**: `#06476F`
-- **Texto claro**: `#EDEDED`
-- **Texto atenuado**: `#DDE8EB`
-- **Fondos oscuros**: `#1a1a1a`, `#0a0a12`, `#0d1b2a`
+| Color | Hex | Uso |
+|-------|-----|-----|
+| **Cyan neón** | `#00E5FF` | Estructura, bordes, acentos principales |
+| **Cyan dim** | `#0099AA` | Estados hover, scrollbar |
+| **Amarillo neón** | `#FFE500` | Interactivos, hover, CTAs |
+| **Amarillo dim** | `#CCA300` | Estados hover de elementos amarillos |
+| **Background** | `#000000` | Fondo principal |
+| **Surface** | `#0a0a0a` | Fondos de tarjetas, secciones |
+| **Texto** | `#FFFFFF` | Texto principal |
+| **Texto muted** | `#888888` | Descripciones, textos secundarios |
+| **Border** | `#333333` | Bordes sutiles, separadores |
 
-La clase utilitaria Tailwind **`font-pixel`** (definida en el tema o en capas de Tailwind según configuración) alinea la tipografía pixel del sitio.
+La clase utilitaria Tailwind **`font-pixel`** aplica la fuente *Press Start 2P*.
 
 ---
 
@@ -171,10 +268,39 @@ En los archivos fuente se añadieron comentarios que describen:
 
 ## Mantenimiento rápido
 
-1. **Añadir proyectos**: edita `posts` en `src/pages/proyectos.astro` y coloca imágenes en `public/` (o URLs externas en `src`).
-2. **Mostrar galería preview en home**: importa `ProjectGallery.astro` en `index.astro` y colócalo donde corresponda.
-3. **Usar logo canvas**: importa `LogoCanvas.astro` en una página y pasa `size="small" | "large"`; revisa ids únicos si hay varios canvas del mismo tamaño.
+### Añadir un proyecto
+
+1. Añade el proyecto al array `projects` en `src/pages/proyectos.astro`:
+   ```ts
+   {
+     id: 'mi-proyecto',
+     title: 'Mi Proyecto',
+     description: 'Descripción breve del proyecto...',
+     year: '2026',
+     technologies: ['html', 'css', 'js'],
+     thumbnail: 'projects/mi-thumb.webp',
+     demoUrl: 'demos/mi-proyecto/index.html',  // opcional
+     hasDemo: true  // habilita Live Preview
+   }
+   ```
+2. Coloca la miniatura en `public/projects/`
+3. Si tiene demo, crea la carpeta `public/demos/mi-proyecto/` con el HTML
+
+### Editar "Sobre Mí"
+
+- Datos del perfil: `src/components/StatsSection.astro` → array `profileData`
+- Biografía: `src/components/StatsSection.astro` → array `bioParagraphs`
+
+### Mostrar galería preview en home
+
+1. Crea o descomenta `src/components/ProjectGallery.astro` (actualmente sin usar)
+2. Impórtalo en `index.astro` y colócalo donde corresponda
+
+### Cambiar imágenes del héroe
+
+- Avatar: `public/icon.webp` (cambia también en `HeroSection.astro` si renombras)
+- Sprites flotantes: están embebidos como SVGs en `HeroSection.astro`
 
 ---
 
-*Documentación generada para alinear el equipo y futuras revisiones del repositorio. Ajusta fechas, versión y nombre del paquete en `package.json` cuando el proyecto deje de ser prototipo.*
+*Documentación actualizada tras revisión de código y adición de componentes React.*

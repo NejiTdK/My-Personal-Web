@@ -9,12 +9,16 @@ import { defineConfig } from 'astro/config';
 /** Plugin de Vite que procesa Tailwind 4 en tiempo de compilación. */
 import tailwindcss from '@tailwindcss/vite';
 
+/** Integración de React */
+import react from '@astrojs/react';
+
 // https://astro.build/config
 export default defineConfig({
   /** URL base del sitio desplegado. Cambia esto por tu URL real. */
   site: 'https://NejiTdK.github.io',
   /** Prefijo de la ruta para GitHub Pages (nombre del repositorio). */
   base: '/My-Personal-Web/',
+  integrations: [react()],
   vite: {
     /** Plugins de Vite aplicados al bundler interno de Astro. */
     plugins: [tailwindcss()]
