@@ -1,5 +1,5 @@
 {
-  "name": "temp-project",
+  "name": "alecdev-portafolio",
   "type": "module",
   "version": "0.0.1",
   "engines": {
@@ -9,7 +9,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "vitest",
+    "test:ui": "vitest --ui"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.3",
@@ -18,5 +20,12 @@
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "tailwindcss": "^4.2.2"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/jsdom": "^28.0.1",
+    "jsdom": "^29.0.2",
+    "vitest": "^4.1.4"
   }
 }

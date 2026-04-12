@@ -1,11 +1,19 @@
 /**
  * Estilos globales del portafolio AlecDev - Nuevo diseño Retro Pixel 8-bit
  * Paleta: Cyan neón (#00E5FF) para estructura, Amarillo neón (#FFE500) para interactivos
+ *
+ * TOKENS SEMÁNTICOS:
+ * - Primitives: valores base (--color-*)
+ * - Theme: tokens semánticos por propósito (--theme-*)
+ * - Component: tokens específicos de componentes (--component-*)
  */
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 @theme {
+  /* ============================================
+     PRIMITIVES - Valores base de la paleta
+     ============================================ */
   --color-bg: #000000;
   --color-surface: #0a0a0a;
   --color-cyan: #00E5FF;
@@ -15,9 +23,73 @@
   --color-text: #FFFFFF;
   --color-text-muted: #888888;
   --color-border: #333333;
+
+  /* ============================================
+     SEMANTIC TOKENS - Uso por propósito
+     ============================================ */
+
+  /* Backgrounds */
+  --theme-bg-primary: var(--color-bg);
+  --theme-bg-secondary: var(--color-surface);
+  --theme-bg-card: var(--color-surface);
+  --theme-bg-input: #1a1a1a;
+
+  /* Accent Colors - Estructura vs Interactividad */
+  --theme-accent-primary: var(--color-cyan);
+  --theme-accent-secondary: var(--color-cyan-dim);
+  --theme-accent-cta: var(--color-yellow);
+  --theme-accent-cta-hover: var(--color-yellow-dim);
+
+  /* Text Colors - Jerarquía */
+  --theme-text-primary: var(--color-text);
+  --theme-text-secondary: var(--color-text-muted);
+  --theme-text-heading: var(--color-text);
+  --theme-text-link: var(--color-cyan);
+  --theme-text-link-hover: var(--color-yellow);
+
+  /* Borders */
+  --theme-border-subtle: var(--color-border);
+  --theme-border-accent: var(--color-cyan);
+  --theme-border-cta: var(--color-yellow);
+
+  /* Interactive States */
+  --theme-interactive-default: var(--color-cyan);
+  --theme-interactive-hover: var(--color-yellow);
+  --theme-interactive-active: var(--color-yellow-dim);
+  --theme-interactive-disabled: var(--color-text-muted);
+
+  /* ============================================
+     COMPONENT TOKENS - Específicos de UI
+     ============================================ */
+
+  /* Card */
+  --component-card-bg: var(--theme-bg-card);
+  --component-card-border: var(--theme-border-accent);
+  --component-card-shadow: var(--color-cyan);
+  --component-card-padding: 1rem;
+
+  /* Button Primary (CTA) */
+  --component-button-bg: var(--theme-accent-cta);
+  --component-button-bg-hover: var(--theme-accent-cta-hover);
+  --component-button-text: var(--color-bg);
+  --component-button-border: transparent;
+
+  /* Button Secondary */
+  --component-button-secondary-bg: transparent;
+  --component-button-secondary-bg-hover: var(--theme-accent-primary);
+  --component-button-secondary-text: var(--theme-accent-primary);
+  --component-button-secondary-text-hover: var(--color-bg);
+  --component-button-secondary-border: var(--theme-accent-primary);
+
+  /* Navigation */
+  --component-nav-bg: rgba(0, 0, 0, 0.9);
+  --component-nav-link: var(--theme-text-secondary);
+  --component-nav-link-hover: var(--theme-accent-cta);
+  --component-nav-link-active: var(--theme-accent-primary);
 }
 
 :root {
+  /* Exponer tokens para CSS vanilla */
   --color-bg: #000000;
   --color-surface: #0a0a0a;
   --color-cyan: #00E5FF;
@@ -27,6 +99,12 @@
   --color-text: #FFFFFF;
   --color-text-muted: #888888;
   --color-border: #333333;
+
+  /* Semantic shortcuts */
+  --accent-primary: var(--color-cyan);
+  --accent-secondary: var(--color-yellow);
+  --text-muted: var(--color-text-muted);
+  --border-subtle: var(--color-border);
 }
 
 * { box-sizing: border-box; }
@@ -46,6 +124,9 @@ body {
   background-size: 24px 24px;
 }
 
+/* ============================================
+   SELECTION & SCROLLBAR
+   ============================================ */
 ::selection {
   background-color: var(--color-yellow);
   color: #000000;
@@ -56,10 +137,16 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--color-cyan-dim); border: 2px solid #000000; }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-cyan); }
 
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
 .pixel-border {
   box-shadow: inset -4px -4px 0px 0px rgba(0,0,0,0.5), inset 4px 4px 0px 0px rgba(255,255,255,0.1);
 }
 
+/* ============================================
+   ANIMATIONS
+   ============================================ */
 .float-animation { animation: float 3s ease-in-out infinite; }
 .blink-animation { animation: blink 1s step-end infinite; }
 .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
@@ -106,6 +193,9 @@ body {
   will-change: transform;
 }
 
+/* ============================================
+   RAINBOW GLOW EFFECT
+   ============================================ */
 .rainbow-glow {
   position: relative;
   overflow: hidden;
@@ -166,4 +256,17 @@ body {
 @keyframes holo-shift {
   0% { background-position: 0% 0%; }
   100% { background-position: 200% 200%; }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

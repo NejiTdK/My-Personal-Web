@@ -2,8 +2,8 @@
 
 | | |
 |---|---|
-| **Versión** | 1.1.0 |
-| **Última actualización** | 2026-04-11 |
+| **Versión** | 1.2.0 |
+| **Última actualización** | 2026-04-12 |
 | **Estado** | Activo |
 
 Sitio estático de portafolio con estética **retro / pixel art** y tipografía **Press Start 2P**. Está construido con **Astro 6** + **React 19** y **Tailwind CSS 4** (integración mediante **Vite**).
@@ -14,7 +14,7 @@ Sitio estático de portafolio con estética **retro / pixel art** y tipografía 
 
 | Aspecto | Detalle |
 |--------|---------|
-| **Nombre en `package.json`** | `temp-project` (placeholder; el sitio se presenta como **AlecDev**) |
+| **Nombre en `package.json`** | `alecdev-portafolio` |
 | **Versión** | `0.0.1` |
 | **Node requerido** | `>= 22.12.0` |
 | **Tipo de módulos** | ESM (`"type": "module"`) |
@@ -26,6 +26,7 @@ Sitio estático de portafolio con estética **retro / pixel art** y tipografía 
 - **Astro** (`^6.0.8`): framework para páginas y componentes `.astro` (HTML + islands opcionales).
 - **React** (`^19.x`): componentes interactivos (ProjectCard, ProjectModal, LoadingSpinner).
 - **Tailwind CSS** (`^4.2.2`) + **@tailwindcss/vite** (`^4.2.2`): utilidades CSS y tema; configurados en `astro.config.mjs` como plugin de Vite.
+- **Testing**: Vitest + React Testing Library + jsdom para tests unitarios.
 - **Sin framework UI adicional**: maquetación con clases Tailwind y CSS scoped/global.
 
 ---
@@ -38,45 +39,110 @@ Sitio estático de portafolio con estética **retro / pixel art** y tipografía 
 | Compilación | `npm run build` | Genera la salida estática en `dist/` (`astro build`). |
 | Vista previa | `npm run preview` | Sirve el build de producción (`astro preview`). |
 | CLI Astro | `npm run astro` | Acceso directo al ejecutable de Astro. |
+| Tests | `npm run test` | Ejecuta tests unitarios con Vitest. |
+| Tests UI | `npm run test:ui` | Ejecuta Vitest con interfaz gráfica. |
 
 ---
 
-## Estructura de carpetas relevante
+## Estructura de carpetas
 
 ```
 Mi Web/
 ├── astro.config.mjs      # Configuración de Astro + plugin Tailwind (Vite)
 ├── package.json
-├── DOCUMENTACION.md      # Este archivo
+├── tsconfig.json         # Configuración TypeScript strict
+├── vitest.config.ts      # Configuración de Vitest para testing
+├── README.md             # Documentación general del proyecto
+├── DOCUMENTACION.md      # Este archivo - documentación técnica detallada
 ├── public/               # Archivos servidos en la raíz del sitio (URLs estáticas)
-│   ├── favicon.svg       # Favicon del sitio
-│   ├── logo.png         # Logo del portafolio
-│   ├── icon.webp        # Avatar del héroe
-│   ├── projects/        # Imágenes de proyectos
+│   ├── favicon-a.svg     # Favicon del sitio
+│   ├── favicon.svg       # Favicon alternativo
+│   ├── favicon.ico       # Favicon legacy
+│   ├── logo.png          # Logo del portafolio
+│   ├── icon.webp         # Avatar del héroe
+│   ├── projects/         # Imágenes de proyectos
 │   │   └── proyecto-a-large.webp
-│   └── demos/           # Demos HTML de proyectos (para Live Preview)
-│       └── protipo-landing/
+│   └── demos/            # Demos HTML de proyectos (para Live Preview)
+│       └── prototipo-landing/
 │           └── index.html
 ├── dist/                 # Salida del build (generada; no editar a mano)
 └── src/
     ├── layouts/
-    │   └── Layout.astro  # Shell HTML: meta, fuentes, slot de página, import global.css
+    │   └── Layout.astro   # Shell HTML: meta, fuentes, slot de página
     ├── pages/
-    │   ├── index.astro   # Ruta "/"
-    │   └── proyectos.astro # Ruta "/proyectos"
+    │   ├── index.astro    # Ruta "/" - Home
+    │   └── proyectos.astro # Ruta "/proyectos" - Galería
     ├── components/
-    │   ├── PixelNav.astro       # Barra de navegación fija
-    │   ├── HeroSection.astro   # Sección hero con avatar y sprites flotantes
-    │   ├── StatsSection.astro # Sección "Sobre mí" con carrusel 3D
-    │   ├── Footer.astro        # Pie de página
-    │   ├── ScrollableImage.astro  # Imagen con scroll vertical (legacy)
-    │   ├── TechIcon.astro         # Iconos pixel de tecnologías (legacy)
-    │   ├── ProjectCard.tsx        # Tarjeta de proyecto (React)
-    │   ├── ProjectModal.tsx      # Modal de Live Preview (React)
-    │   └── LoadingSpinner.tsx   # Spinner de carga (React)
-    └── styles/
-        └── global.css    # Tailwind, variables, animaciones y utilidades globales
+    │   ├── sections/      # Componentes de sección específicos
+    │   │   ├── PixelNav.astro      # Barra de navegación fija
+    │   │   ├── HeroSection.astro   # Sección hero con avatar
+    │   │   ├── StatsSection.astro  # Sección "Sobre mí" con carrusel 3D
+    │   │   └── Footer.astro        # Pie de página
+    │   ├── features/      # Componentes React de features específicas
+    │   │   ├── ProjectCard.tsx     # Tarjeta de proyecto
+    │   │   ├── ProjectModal.tsx    # Modal de Live Preview
+    │   │   ├── ProjectModal.test.tsx # Tests del modal
+    │   │   └── LoadingSpinner.tsx  # Spinner de carga pixel art
+    │   └── ui/            # Componentes UI reutilizables (vacío por ahora)
+    ├── styles/
+    │   └── global.css     # Tailwind, tokens semánticos, animaciones
+    └── test/
+        └── setup.ts       # Configuración de Vitest + Testing Library
 ```
+
+---
+
+## Arquitectura de Componentes
+
+### Estrategia: Astro vs React
+
+| Componente | Tecnología | Razón |
+|------------|------------|-------|
+| `PixelNav`, `HeroSection`, `StatsSection`, `Footer` | Astro | Mayormente estáticos, JS mínimo para animaciones CSS |
+| `ProjectCard`, `ProjectModal`, `LoadingSpinner` | React | Estado complejo (loading, error, retry), interacciones del usuario |
+
+**Regla**: Si necesita `useState`, `useEffect` o manejo de eventos complejos → React. Si es markup con CSS → Astro.
+
+### Organización de carpetas
+
+- **`sections/`**: Componentes que representan secciones completas de página
+- **`features/`**: Componentes React relacionados con features específicos (proyectos)
+- **`ui/`**: Componentes UI reutilizables genéricos (vacío, listo para escalar)
+
+---
+
+## Tokens semánticos CSS
+
+Los tokens están definidos en `src/styles/global.css` usando `@theme` de Tailwind v4:
+
+### Tokens primitivos (colores base)
+
+```css
+--color-cyan: #00E5FF;
+--color-cyan-dim: #0099AA;
+--color-yellow: #FFE500;
+--color-yellow-dim: #CCA300;
+--color-bg: #000000;
+--color-surface: #0a0a0a;
+--color-text: #FFFFFF;
+--color-text-muted: #888888;
+--color-border: #333333;
+```
+
+### Tokens semánticos (uso por propósito)
+
+```css
+--theme-bg-primary: var(--color-bg);        /* Fondos principales */
+--theme-bg-secondary: var(--color-surface);  /* Tarjetas, secciones */
+--theme-accent-primary: var(--color-cyan);    /* Estructura, bordes */
+--theme-accent-cta: var(--color-yellow);     /* Botones, CTAs */
+--theme-text-primary: var(--color-text);     /* Texto principal */
+--theme-text-secondary: var(--color-text-muted); /* Descripciones */
+--theme-border-subtle: var(--color-border);  /* Bordes sutiles */
+--theme-border-accent: var(--color-cyan);    /* Bordes destacados */
+```
+
+**Beneficio**: Si cambias la paleta, solo modificas los tokens primitivos; los componentes usan tokens semánticos y no se rompen.
 
 ---
 
@@ -93,50 +159,39 @@ El **file-based routing** de Astro convierte cada archivo en `src/pages/` en una
 
 ## Layout y estilos globales
 
-- **`Layout.astro`**: documento HTML5 (`lang="es"`), meta viewport, descripción SEO, favicon, fuente Google *Press Start 2P*, y `<slot />` donde cada página inyecta su contenido. Importa **`global.css`** de forma global.
-- **`global.css`**: `@import "tailwindcss"`, bloque `@theme` con colores del proyecto, variables en `:root`, estilos base de `html`/`body`, scrollbar personalizada, animaciones (`flicker`, `float`, `pulse-glow`, etc.) y clases auxiliares (`.hp-bar`, `.gallery-item`, …).
+- **`Layout.astro`**: documento HTML5 (`lang="es"`), meta viewport, descripción SEO, favicon con `BASE_URL`, fuente Google *Press Start 2P*, y `<slot />` donde cada página inyecta su contenido. Importa **`global.css`** de forma global.
+- **`global.css`**: `@import "tailwindcss"`, tokens `@theme` con colores semánticos, variables en `:root`, estilos base de `html`/`body`, scrollbar personalizada, animaciones (`flicker`, `float`, `pulse-glow`, etc.) y clases auxiliares.
 
 ---
 
 ## Componentes
 
-### `PixelNav.astro`
+### `PixelNav.astro` (en `sections/`)
 
 Barra **fija** superior con logo, marca **ALECDEV** y enlaces:
-
 - **INICIO** → `/`
 - **SOBRE MÍ** → `#sobre-mi` en home, o `/#sobre-mi` en otras rutas
 - **PROYECTOS** → `/proyectos`
 
-### `HeroSection.astro`
+### `HeroSection.astro` (en `sections/`)
 
 Sección **pantalla completa** (`#inicio`): avatar `/icon.webp`, título, rol, tagline, botón a `#sobre-mi`, indicador de scroll y **sprites flotantes** de tecnologías (HTML, CSS, JS, Astro, React, MySQL) con animaciones.
 
-### `StatsSection.astro`
+### `StatsSection.astro` (en `sections/`)
 
 Sección **`#sobre-mi`** con dos layouts:
-
 - **Mobile**: grid de tarjetas apiladas (perfil + bios)
 - **Desktop**: **carrusel 3D** con efecto de profundidad (escala, opacidad, posición)
 
 Incluye script con navegación por botones y teclado (flechas).
 
-### `Footer.astro`
+### `Footer.astro` (en `sections/`)
 
 Pie con copyright **2026**, estado "READY TO WORK", versión **v1.0.0**, mensaje "Hecho con ♥ y código" y franja decorativa de cuadrados animados (pulse-glow).
 
-### `ScrollableImage.astro` *(legacy)*
-
-Componente de imagen con scroll vertical. Muestra indicador "SCROLL" que se oculta al hacer hover. Útil para capturas largas.
-
-### `TechIcon.astro` *(legacy)*
-
-Iconos SVG pixel art para tecnologías: HTML, CSS, JS, PostCSS. Tamaños: `sm`, `md`, `lg`.
-
-### `ProjectCard.tsx` *(React)*
+### `ProjectCard.tsx` (en `features/`)
 
 Tarjeta de proyecto con:
-
 - Header con logo y título
 - Miniatura con overlay de **Live Preview** (si `hasDemo: true`)
 - Descripción, año y tecnologías
@@ -144,25 +199,44 @@ Tarjeta de proyecto con:
 
 Se usa con `client:load` en `proyectos.astro`.
 
-### `ProjectModal.tsx` *(React)*
+### `ProjectModal.tsx` (en `features/`)
 
 Modal fullscreen con iframe para **Live Preview**:
-
 - Estados: loading (spinner), error (retry), listo
 - Cerrar: Escape, click fuera, botón X
 - Accesibilidad: `role="dialog"`, `aria-modal`
+- **Tests**: `ProjectModal.test.tsx` verifica estados y accesibilidad
 
-### `LoadingSpinner.tsx` *(React)*
+### `LoadingSpinner.tsx` (en `features/`)
 
 Spinner animado estilo 8-bit con 4 esquinas pulsantes y centro amarillo estático.
 
-### `ProjectGallery.astro` *(sin usar)*
+---
 
-Bloque de preview con botón a proyectos. **No está importado** actualmente.
+## Testing
 
-### `LogoCanvas.astro` *(sin usar)*
+### Configuración
 
-Renderiza el logo en canvas desde ASCII. **No está importado** actualmente.
+- **Vitest**: Runner de tests
+- **@testing-library/react**: Renderizado y queries para React
+- **@testing-library/jest-dom**: Matchers adicionales
+- **jsdom**: Entorno de navegador simulado
+
+### Ejecutar tests
+
+```bash
+npm run test        # Ejecuta todos los tests
+npm run test -- --watch  # Modo watch (re-ejecuta al guardar)
+```
+
+### Tests existentes
+
+**`ProjectModal.test.tsx`**:
+- Renderizado condicional (isOpen)
+- Estados de carga (spinner)
+- Cierre del modal (Escape, click backdrop, botón X)
+- Accesibilidad (ARIA attributes)
+- Reset de estado al reabrir
 
 ---
 
@@ -180,8 +254,8 @@ interface Project {
   year: string;         // Año de creación
   technologies: string[]; // ['html', 'css', 'js', 'react', 'astro']
   thumbnail: string;   // Ruta a imagen (en /public)
-  demoUrl?: string;     // Ruta al demo HTML (en /public/demos/)
-  hasDemo?: boolean;    // Habilita botón Live Preview
+  demoUrl?: string;     // Ruta al demo HTML (en /public/demos/) - opcional
+  hasDemo?: boolean;    // Habilita botón Live Preview - opcional
 }
 ```
 
@@ -194,16 +268,16 @@ Si no hay proyectos (`projects.length === 0`), se muestra "Sin proyectos aún".
 ### Componentes React
 
 - **`ProjectCard.tsx`**: Renderiza cada tarjeta. Usa `client:load` para hydrate en cliente.
-- **`ProjectModal.tsx`**: Modal con iframe, estados de carga/error,retry.
+- **`ProjectModal.tsx`**: Modal con iframe, estados de carga/error, retry.
 - **`LoadingSpinner.tsx`**: Spinner pixel art para estados de carga.
 
 ---
 
 ## Activos estáticos (`public/`)
 
-El código referencia rutas absolutas desde la raíz del sitio:
+El código referencia rutas absolutas desde la raíz del sitio usando `import.meta.env.BASE_URL`:
 
-- `/favicon.svg` — configurado en `Layout.astro`
+- `/favicon-a.svg` — configurado en `Layout.astro`
 - `/logo.png` — navegación, tarjetas de proyecto
 - `/icon.webp` — avatar del héroe
 - `/projects/` — miniaturas de proyectos
@@ -249,20 +323,22 @@ La clase utilitaria Tailwind **`font-pixel`** aplica la fuente *Press Start 2P*.
 **`astro.config.mjs`** exporta `defineConfig` con:
 
 ```js
+site: 'https://NejiTdK.github.io',
+base: '/My-Personal-Web/',
 vite: { plugins: [tailwindcss()] }
 ```
 
-No hay adaptador de servidor en el config actual: el proyecto está orientado a **sitio estático** por defecto.
+Configurado para **GitHub Pages** con prefijo de ruta.
 
 ---
 
 ## Comentarios en el código
 
 En los archivos fuente se añadieron comentarios que describen:
-
 - **Qué es** cada archivo o bloque principal.
 - **A qué pertenece** (ruta del archivo, relación con rutas o layout).
-- **Props** de componentes, **variables** relevantes y **comportamiento** de scripts (carrusel, hover de habilidades, canvas).
+- **Props** de componentes, **variables** relevantes y **comportamiento** de scripts.
+- **Estrategia** de Astro vs React para mantener consistencia.
 
 ---
 
@@ -288,19 +364,38 @@ En los archivos fuente se añadieron comentarios que describen:
 
 ### Editar "Sobre Mí"
 
-- Datos del perfil: `src/components/StatsSection.astro` → array `profileData`
-- Biografía: `src/components/StatsSection.astro` → array `bioParagraphs`
-
-### Mostrar galería preview en home
-
-1. Crea o descomenta `src/components/ProjectGallery.astro` (actualmente sin usar)
-2. Impórtalo en `index.astro` y colócalo donde corresponda
+- Datos del perfil: `src/components/sections/StatsSection.astro` → array `profileData`
+- Biografía: `src/components/sections/StatsSection.astro` → array `bioParagraphs`
 
 ### Cambiar imágenes del héroe
 
 - Avatar: `public/icon.webp` (cambia también en `HeroSection.astro` si renombras)
 - Sprites flotantes: están embebidos como SVGs en `HeroSection.astro`
 
+### Agregar tests
+
+1. Crea archivo `.test.tsx` junto al componente en `features/`
+2. Importa React y los helpers de testing-library
+3. Ejecuta con `npm run test`
+
 ---
 
-*Documentación actualizada tras revisión de código y adición de componentes React.*
+## Changelog
+
+### v1.2.0 (2026-04-12)
+- ✅ Renombrado package.json de `temp-project` a `alecdev-portafolio`
+- ✅ Actualizado README.md con información completa del proyecto
+- ✅ Reorganizada estructura de componentes:
+  - Creadas carpetas `sections/`, `features/`, `ui/`
+  - Movidos componentes a ubicaciones semánticas
+- ✅ Implementados tokens semánticos CSS en `global.css`
+- ✅ Agregado sistema de testing con Vitest + React Testing Library
+- ✅ Tests para `ProjectModal` (renderizado, estados, accesibilidad)
+
+### v1.1.0 (2026-04-11)
+- Actualización de componentes React para Live Preview
+- Documentación técnica expandida
+
+---
+
+*Documentación actualizada tras refactorización de arquitectura y adición de testing.*
