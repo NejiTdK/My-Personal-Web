@@ -8,8 +8,11 @@
 import Layout from '../layouts/Layout.astro';
 import PixelNav from '../components/sections/PixelNav.astro';
 import HeroSection from '../components/sections/HeroSection.astro';
-import StatsSection from '../components/sections/StatsSection.astro';
+import StatsCarousel from '../components/features/StatsCarousel';
 import Footer from '../components/sections/Footer.astro';
+
+/** URL base del sitio (importante para GitHub Pages) */
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <Layout title="AlecDev | Portafolio Retro">
@@ -24,8 +27,8 @@ import Footer from '../components/sections/Footer.astro';
       tagline="Desarrollador front-end jr, entusiasta del desarrollo y transformación de ideas en proyectos con el uso de IA"
     />
     
-    <!-- Perfil estilo consola: datos y bio -->
-    <StatsSection />
+    <!-- Perfil estilo consola: datos y bio (carrusel 3D) -->
+    <StatsCarousel client:load baseUrl={baseUrl} />
   </main>
   
   <!-- Pie de página con copyright y decoración pixel. -->
