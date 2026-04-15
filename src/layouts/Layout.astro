@@ -2,46 +2,160 @@
 /**
  * Plantilla HTML base compartida por todas las páginas.
  * Pertenece a: `src/layouts/Layout.astro` (layout raíz del sitio).
- *
- * Props:
- * - `title`: título de la pestaña del navegador.
- * - `description`: meta descripción SEO (opcional).
+ * 
+ * Props mejoradas para SEO:
+ * - `title`: título de la pestaña
+ * - `description`: meta descripción SEO
+ * - `ogImage`: ruta a imagen Open Graph (opcional)
+ * - `canonicalUrl`: URL canónica de la página (opcional)
+ * - `noindex`: boolean para evitar indexación (opcional)
+ * 
+ * Includes: Open Graph, Twitter Cards, Schema.org, Meta tags
  */
+import { siteConfig } from '../config/seo';
+
 interface Props {
   title: string;
   description?: string;
+  ogImage?: string;
+  canonicalUrl?: string;
+  noindex?: boolean;
 }
 
-/** Título y descripción por defecto si no se pasan desde la página. */
-const { title, description = "Portafolio retro pixel art" } = Astro.props;
-/** Prefijo base (importante para GitHub Pages en repos de proyecto). */
-const baseUrl = import.meta.env.BASE_URL;
+/** Descripción por defecto mejorada para SEO */
+const { 
+  title, 
+  description = siteConfig.description,
+  ogImage = siteConfig.ogImage,
+  canonicalUrl,
+  noindex = false
+} = Astro.props;
+
+/** URL base - BASE_URL ya incluye el path del proyecto */
+const baseUrl = import.meta.env.BASE_URL; // "/My-Personal-Web/"
+const siteUrl = siteConfig.siteUrl; // "https://NejiTdK.github.io"
+
+/** URL canónica completa */
+const canonical = canonicalUrl || `${siteUrl}${baseUrl}`;
+
+/** Imagen OG completa */
+const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${baseUrl}${ogImage}`;
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": siteConfig.title,
+  "jobTitle": siteConfig.tagline,
+  "url": `${siteUrl}${baseUrl}`,
+  "image": ogImageUrl,
+  "description": siteConfig.description,
+  "sameAs": [
+    `https://github.com/${siteConfig.githubUsername}`,
+  ],
+  "worksFor": {
+    "@type": "Organization",
+    "name": "AlecDev Portfolio"
+  }
+};
 ---
 
 <!doctype html>
-<!-- Documento HTML5; `lang="es"` para accesibilidad e indexación en español. -->
-<html lang="es">
+<!-- Documento HTML5 optimizado para SEO -->
+<html lang={siteConfig.language}>
   <head>
-    <!-- Codificación y viewport estándar para responsive. -->
+    <!-- ============================================
+         META BÁSICAS
+         ============================================ -->
     <meta charset="UTF-8" />
-    <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Favicon servido desde `/public` en la URL raíz del sitio. -->
-    <link rel="icon" type="image/svg+xml" href={`${baseUrl}favicon-a.svg`} />
+    
+    <!-- Robots (indexación) -->
+    {noindex ? (
+      <meta name="robots" content="noindex, nofollow" />
+    ) : (
+      <meta name="robots" content="index, follow" />
+    )}
+    
+    <!-- Meta descripción (150-160 caracteres ideal) -->
+    <meta name="description" content={description} />
+    
+    <!-- Author y keywords -->
+    <meta name="author" content={siteConfig.author} />
+    <meta name="keywords" content="desarrollador front-end, React, Astro, JavaScript, portfolio, web developer, frontend" />
+    
+    <!-- Generator (Astro) -->
     <meta name="generator" content={Astro.generator} />
+    
+    <!-- ============================================
+         CANONICAL URL
+         ============================================ -->
+    <link rel="canonical" href={canonical} />
+    
+    <!-- ============================================
+         SITEMAP
+         ============================================ -->
+    <link rel="sitemap" href={`${siteUrl}${baseUrl}sitemap.xml`} type="application/xml" />
+    
+    <!-- ============================================
+         OPEN GRAPH (Facebook, LinkedIn, WhatsApp)
+         ============================================ -->
+    <meta property="og:site_name" content={siteConfig.title} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content={siteConfig.locale} />
+    
+    <!-- ============================================
+         TWITTER CARDS
+         ============================================ -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:creator" content={siteConfig.twitterHandle} />
+    <meta name="twitter:site" content={siteConfig.twitterHandle} />
+    
+    <!-- ============================================
+         FAVICON
+         ============================================ -->
+    <link rel="icon" type="image/svg+xml" href={`${baseUrl}${siteConfig.favicon}`} />
+    <link rel="apple-touch-icon" href={`${baseUrl}${siteConfig.favicon}`} />
+    
+    <!-- ============================================
+         TÍTULO
+         ============================================ -->
     <title>{title}</title>
-    <!-- Preconnect acelera la carga de la fuente pixel desde Google Fonts. -->
+    
+    <!-- ============================================
+         PRECONNECT (performance)
+         ============================================ -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- ============================================
+         SCHEMA.ORG STRUCTURED DATA
+         ============================================ -->
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+    
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   </head>
+  
   <body>
-    <!-- Contenido de cada página inyectado aquí mediante `<Layout>...</Layout>`. -->
+    <!-- Contenido de cada página inyectado aquí -->
     <slot />
   </body>
 </html>
 
 <script>
+  /**
+   * Efecto tilt 3D para las cards
+   * Solo se aplica a elementos con clase .tilt-card
+   */
   document.addEventListener('DOMContentLoaded', () => {
     const tiltCards = document.querySelectorAll('.tilt-card');
 
@@ -73,6 +187,5 @@ const baseUrl = import.meta.env.BASE_URL;
 </script>
 
 <style is:global>
-  /* Estilos globales del sitio (tokens, animaciones, scrollbar, etc.). */
   @import '../styles/global.css';
 </style>

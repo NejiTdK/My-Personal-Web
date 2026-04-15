@@ -10,12 +10,16 @@ import PixelNav from '../components/sections/PixelNav.astro';
 import HeroSection from '../components/sections/HeroSection.astro';
 import StatsCarousel from '../components/features/StatsCarousel';
 import Footer from '../components/sections/Footer.astro';
+import { pages } from '../config/seo';
 
 /** URL base del sitio (importante para GitHub Pages) */
 const baseUrl = import.meta.env.BASE_URL;
 ---
 
-<Layout title="AlecDev | Portafolio Retro">
+<Layout 
+  title={pages.home.title}
+  description={pages.home.description}
+>
   <!-- Barra de navegación fija superior (compartida con otras páginas). -->
   <PixelNav />
   
