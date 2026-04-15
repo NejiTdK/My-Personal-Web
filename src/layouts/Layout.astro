@@ -12,6 +12,7 @@
  * 
  * Includes: Open Graph, Twitter Cards, Schema.org, Meta tags
  */
+import { ClientRouter } from 'astro:transitions';
 import { siteConfig } from '../config/seo';
 
 interface Props {
@@ -63,6 +64,9 @@ const structuredData = {
 <!-- Documento HTML5 optimizado para SEO -->
 <html lang={siteConfig.language}>
   <head>
+    <!-- ClientRouter (View Transitions) para animaciones suaves entre páginas -->
+    <ClientRouter />
+
     <!-- ============================================
          META BÁSICAS
          ============================================ -->
@@ -152,39 +156,68 @@ const structuredData = {
 </html>
 
 <script>
-  /**
-   * Efecto tilt 3D para las cards
-   * Solo se aplica a elementos con clase .tilt-card
-   */
-  document.addEventListener('DOMContentLoaded', () => {
-    const tiltCards = document.querySelectorAll('.tilt-card');
+      /**
+       * Scroll Reveal - Animaciones al hacer scroll
+       */
+      function initScrollReveal() {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+            }
+          });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-    tiltCards.forEach(card => {
-      const handleMouseMove = (e: MouseEvent) => {
-        const rect = (card as HTMLElement).getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        
-        const rotateX = ((y - centerY) / centerY) * -10;
-        const rotateY = ((x - centerX) / centerX) * 10;
-        
-        (card as HTMLElement).style.transform = 
-          `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-      };
+        document.querySelectorAll('.reveal, .reveal-fade, .reveal-scale, .stagger-children').forEach(el => {
+          observer.observe(el);
+        });
+      }
 
-      const handleMouseLeave = () => {
-        (card as HTMLElement).style.transform = 
-          'perspective(1000px) rotateX(0deg) rotateY(0deg)';
-      };
+      /**
+       * Efecto tilt 3D para las cards
+       * Solo se aplica a elementos con clase .tilt-card
+       */
+      function initTiltCards() {
+        const tiltCards = document.querySelectorAll('.tilt-card');
 
-      card.addEventListener('mousemove', handleMouseMove);
-      card.addEventListener('mouseleave', handleMouseLeave);
-    });
-  });
-</script>
+        tiltCards.forEach(card => {
+          const handleMouseMove = (e: MouseEvent) => {
+            const rect = (card as HTMLElement).getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = ((y - centerY) / centerY) * -10;
+            const rotateY = ((x - centerX) / centerX) * 10;
+            
+            (card as HTMLElement).style.transform = 
+              `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+          };
+
+          const handleMouseLeave = () => {
+            (card as HTMLElement).style.transform = 
+              'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+          };
+
+          card.addEventListener('mousemove', handleMouseMove);
+          card.addEventListener('mouseleave', handleMouseLeave);
+        });
+      }
+
+      // Ejecutar en carga inicial
+      document.addEventListener('DOMContentLoaded', () => {
+        initScrollReveal();
+        initTiltCards();
+      });
+
+      // Ejecutar después de View Transitions
+      document.addEventListener('astro:page-load', () => {
+        initScrollReveal();
+        initTiltCards();
+      });
+    </script>
 
 <style is:global>
   @import '../styles/global.css';

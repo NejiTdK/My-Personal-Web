@@ -37,7 +37,7 @@ const allCards = [
 <section id="sobre-mi" class="py-8 sm:py-12 px-3 sm:px-4 relative">
   <div class="max-w-5xl mx-auto">
     <div class="text-center mb-6 sm:mb-8">
-      <h2 class="font-pixel text-lg sm:text-xl md:text-2xl text-[#FFFFFF] inline-block relative">
+      <h2 class="font-pixel text-lg sm:text-xl md:text-2xl text-[#FFFFFF] inline-block relative reveal">
         <span class="absolute -left-4 sm:-left-6 top-1/2 -translate-y-1/2 text-[#00E5FF]">▶</span>
         SOBRE MÍ
         <span class="absolute -right-4 sm:-right-6 top-1/2 -translate-y-1/2 text-[#00E5FF] rotate-180">▶</span>
@@ -80,7 +80,7 @@ const allCards = [
 
     <!-- Desktop: Carrusel horizontal -->
     <div class="hidden sm:block relative">
-      <div id="carousel-container" class="flex items-center justify-center gap-4 overflow-visible h-[450px]">
+      <div id="carousel-container" class="flex items-center justify-center gap-4 overflow-visible h-[480px]">
         {allCards.map((card, index) => (
           <div
             class="carousel-card transition-all duration-500"
@@ -88,7 +88,7 @@ const allCards = [
           >
             <div class="tilt-card w-full h-full">
               {card.type === 'profile' ? (
-                <div class="bg-[#0a0a0a] border-2 border-[#00E5FF] p-5 w-80 overflow-hidden" style="box-shadow: 4px 4px 0 #00E5FF; height: 380px;">
+                <div class="bg-[#0a0a0a] border-2 border-[#00E5FF] p-6 w-[28rem] overflow-hidden" style="box-shadow: 4px 4px 0 #00E5FF; height: 440px;">
                   <div class="flex items-center gap-2 mb-4 border-b border-[#333] pb-3">
                     <span class="text-[#00E5FF]">◉</span>
                     <h3 class="font-pixel text-sm text-[#00E5FF]">PERFIL</h3>
@@ -96,19 +96,19 @@ const allCards = [
                   <div class="space-y-3">
                     {card.data.map((item: any) => (
                       <div class="flex flex-row items-center gap-2 font-pixel text-xs">
-                        <span class="text-[#00E5FF] w-24 flex-shrink-0">{item.label}:</span>
+                        <span class="text-[#00E5FF] w-28 flex-shrink-0">{item.label}:</span>
                         <span class="text-[#FFFFFF]">{item.value}</span>
                       </div>
                     ))}
                   </div>
                 </div>
               ) : (
-                <div class="bg-[#0a0a0a] border-2 border-[#00E5FF] p-5 w-80 overflow-hidden" style="box-shadow: 4px 4px 0 #00E5FF; height: 380px;">
+                <div class="bg-[#0a0a0a] border-2 border-[#00E5FF] p-6 w-[28rem] overflow-hidden" style="box-shadow: 4px 4px 0 #00E5FF; height: 440px;">
                   <div class="flex items-center gap-2 mb-4 border-b border-[#333] pb-3">
                     <span class="text-[#FFE500]">♦</span>
                     <span class="font-pixel text-sm text-[#FFE500]">BIO-{card.index}</span>
                   </div>
-                  <p class="font-pixel text-sm text-[#888888] leading-relaxed overflow-y-auto h-[280px]">
+                  <p class="font-pixel text-sm text-[#888888] leading-relaxed overflow-y-auto h-[340px]">
                     {card.data}
                   </p>
                 </div>
@@ -229,7 +229,7 @@ const allCards = [
   .carousel-card {
     position: absolute;
     width: 100%;
-    max-width: 20rem;
+    max-width: 28rem;
     cursor: pointer;
     will-change: transform, opacity;
   }
