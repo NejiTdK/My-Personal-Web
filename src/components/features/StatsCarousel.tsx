@@ -21,17 +21,21 @@ const bioParagraphs = [
   `Soy una persona analítica, perfeccionista y muy metódica. Antes de comenzar a construir, me gusta investigar, absorber información y buscar la inspiración que impulsará la idea. Sé que tengo mucho por aprender, pero estoy muy motivado para seguir creciendo y contribuir con mi enfoque y atención al detalle.`,
 ];
 
-// Combinar en array: primero perfil, luego bio
-const allCards = [
-  { type: 'profile', data: profileData },
-  ...bioParagraphs.map((text, i) => ({ type: 'bio', data: text, index: i + 1 }))
-];
+type ProfileField = { label: string; value: string };
 
-interface Card {
-  type: 'profile' | 'bio';
-  data: any;
-  index?: number;
-}
+type CarouselCard =
+  | { type: 'profile'; data: ProfileField[] }
+  | { type: 'bio'; data: string; index: number };
+
+// Combinar en array: primero perfil, luego bio
+const allCards: CarouselCard[] = [
+  { type: 'profile', data: profileData },
+  ...bioParagraphs.map((text, i) => ({
+    type: 'bio' as const,
+    data: text,
+    index: i + 1,
+  })),
+];
 
 interface StatsCarouselProps {
   baseUrl: string;
@@ -43,12 +47,6 @@ interface StatsCarouselProps {
 export default function StatsCarousel({ baseUrl }: StatsCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-
-  // Función para actualizar el carrusel
-  const updateCarousel = useCallback(() => {
-    // La actualización visual se maneja con estado de React
-    // Los estilos se aplican dinámicamente en el render
-  }, []);
 
   const goToNext = useCallback(() => {
     if (isAnimating) return;
@@ -120,7 +118,7 @@ export default function StatsCarousel({ baseUrl }: StatsCarouselProps) {
   };
 
   // Renderiza una card individual
-  const renderCard = (card: Card, index: number) => {
+  const renderCard = (card: CarouselCard, index: number) => {
     const isProfile = card.type === 'profile';
 
     return (
@@ -147,7 +145,7 @@ export default function StatsCarousel({ baseUrl }: StatsCarouselProps) {
                 <h3 className="font-pixel text-sm text-[#00E5FF]">PERFIL</h3>
               </div>
               <div className="space-y-3">
-                {(card.data as Array<{label: string, value: string}>).map((item, i) => (
+                {card.data.map((item, i) => (
                   <div key={i} className="flex flex-row items-center gap-2 font-pixel text-xs">
                     <span className="text-[#00E5FF] w-24 flex-shrink-0">{item.label}:</span>
                     <span className="text-[#FFFFFF]">{item.value}</span>
@@ -190,7 +188,7 @@ export default function StatsCarousel({ baseUrl }: StatsCarouselProps) {
                 <h3 className="font-pixel text-sm text-[#00E5FF]">PERFIL</h3>
               </div>
               <div className="space-y-2">
-                {(card.data as Array<{label: string, value: string}>).map((item, i) => (
+                {card.data.map((item, i) => (
                   <div key={i} className="flex flex-row items-center gap-2 font-pixel text-xs">
                     <span className="text-[#00E5FF] w-24 flex-shrink-0">{item.label}:</span>
                     <span className="text-[#FFFFFF]">{item.value}</span>
