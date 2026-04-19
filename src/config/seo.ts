@@ -26,7 +26,7 @@ export const siteConfig = {
   ogImage: 'og-image.png', // 1200x630px recomendado
   
   // Favicon
-  favicon: 'favicon-a.svg',
+  favicon: 'DEV-LOGO.png',
 };
 
 export const pages = {
