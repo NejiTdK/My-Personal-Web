@@ -129,7 +129,7 @@ export default function StatsCarousel({ baseUrl }: StatsCarouselProps) {
           ...getCardStyle(index),
           position: 'absolute',
           width: '100%',
-          maxWidth: '20rem',
+          maxWidth: '28rem',
           cursor: 'pointer',
           willChange: 'transform, opacity',
         }}
@@ -137,16 +137,16 @@ export default function StatsCarousel({ baseUrl }: StatsCarouselProps) {
         <div className="tilt-card w-full h-full">
           {isProfile ? (
             <div 
-              className="bg-[#0a0a0a] border-2 border-[#00E5FF] p-5 w-80 overflow-hidden"
-              style={{ boxShadow: '4px 4px 0 #00E5FF', height: '380px' }}
+              className="bg-[#0a0a0a] border-2 border-[#00E5FF] p-6 w-[28rem] overflow-hidden"
+              style={{ boxShadow: '4px 4px 0 #00E5FF', height: '440px' }}
             >
               <div className="flex items-center gap-2 mb-4 border-b border-[#333] pb-3">
                 <span className="text-[#00E5FF]">◉</span>
-                <h3 className="font-pixel text-sm text-[#00E5FF]">PERFIL</h3>
+                <h3 className="font-pixel text-[10px] text-[#00E5FF]">PERFIL</h3>
               </div>
               <div className="space-y-3">
                 {card.data.map((item, i) => (
-                  <div key={i} className="flex flex-row items-center gap-2 font-pixel text-xs">
+                  <div key={i} className="flex flex-row items-center gap-2 font-pixel text-[10px]">
                     <span className="text-[#00E5FF] w-24 flex-shrink-0">{item.label}:</span>
                     <span className="text-[#FFFFFF]">{item.value}</span>
                   </div>
@@ -155,14 +155,14 @@ export default function StatsCarousel({ baseUrl }: StatsCarouselProps) {
             </div>
           ) : (
             <div 
-              className="bg-[#0a0a0a] border-2 border-[#00E5FF] p-5 w-80 overflow-hidden"
-              style={{ boxShadow: '4px 4px 0 #00E5FF', height: '380px' }}
+              className="bg-[#0a0a0a] border-2 border-[#00E5FF] p-6 w-[28rem] overflow-hidden"
+              style={{ boxShadow: '4px 4px 0 #00E5FF', height: '440px' }}
             >
               <div className="flex items-center gap-2 mb-4 border-b border-[#333] pb-3">
                 <span className="text-[#FFE500]">♦</span>
-                <span className="font-pixel text-sm text-[#FFE500]">BIO-{card.index}</span>
+                <span className="font-pixel text-[10px] text-[#FFE500]">BIO-{card.index}</span>
               </div>
-              <p className="font-pixel text-sm text-[#888888] leading-relaxed overflow-y-auto h-[280px]">
+              <p className="font-pixel text-xs text-[#888888] leading-relaxed overflow-y-auto h-[340px]">
                 {card.data}
               </p>
             </div>
@@ -183,13 +183,21 @@ export default function StatsCarousel({ baseUrl }: StatsCarouselProps) {
         >
           {card.type === 'profile' ? (
             <>
-              <div className="flex items-center gap-2 mb-3 border-b border-[#333] pb-2">
+<div className="flex items-center gap-2 mb-3 border-b border-[#333] pb-2">
                 <span className="text-[#00E5FF]">◉</span>
-                <h3 className="font-pixel text-sm text-[#00E5FF]">PERFIL</h3>
+                <h3 className="font-pixel text-[10px] text-[#00E5FF]">PERFIL</h3>
               </div>
               <div className="space-y-2">
                 {card.data.map((item, i) => (
-                  <div key={i} className="flex flex-row items-center gap-2 font-pixel text-xs">
+                  <div key={i} className="flex flex-row items-center gap-2 font-pixel text-[10px]">
+                    <span className="text-[#00E5FF] w-24 flex-shrink-0">{item.label}:</span>
+                    <span className="text-[#FFFFFF]">{item.value}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="space-y-2">
+                {card.data.map((item, i) => (
+                  <div key={i} className="flex flex-row items-center gap-2 font-pixel text-[10px]">
                     <span className="text-[#00E5FF] w-24 flex-shrink-0">{item.label}:</span>
                     <span className="text-[#FFFFFF]">{item.value}</span>
                   </div>
@@ -200,9 +208,9 @@ export default function StatsCarousel({ baseUrl }: StatsCarouselProps) {
             <>
               <div className="flex items-center gap-2 mb-3 border-b border-[#333] pb-2">
                 <span className="text-[#FFE500]">♦</span>
-                <span className="font-pixel text-sm text-[#FFE500]">BIO-{card.index}</span>
+                <span className="font-pixel text-[10px] text-[#FFE500]">BIO-{card.index}</span>
               </div>
-              <p className="font-pixel text-xs text-[#888888] leading-relaxed">
+              <p className="font-pixel text-[10px] text-[#888888] leading-relaxed">
                 {card.data}
               </p>
             </>
@@ -217,7 +225,7 @@ export default function StatsCarousel({ baseUrl }: StatsCarouselProps) {
     <div className="hidden sm:block relative">
       <div 
         id="carousel-container" 
-        className="flex items-center justify-center gap-4 overflow-visible h-[450px]"
+        className="flex items-center justify-center gap-4 overflow-visible h-[520px]"
       >
         {allCards.map((card, index) => renderCard(card, index))}
       </div>
@@ -267,16 +275,6 @@ export default function StatsCarousel({ baseUrl }: StatsCarouselProps) {
         {/* Mobile: Grid stack | Desktop: Carrusel */}
         {renderMobileCards()}
         {renderDesktopCarousel()}
-
-        {/* CTA */}
-        <div className="mt-4 sm:mt-6 text-center">
-          <a
-            href={`${baseUrl}proyectos/`}
-            className="inline-block px-6 sm:px-8 py-3 sm:py-4 bg-[#00E5FF] hover:bg-[#FFE500] transition-colors font-pixel text-xs sm:text-sm text-[#000000]"
-          >
-            VER PROYECTOS →
-          </a>
-        </div>
       </div>
     </section>
   );

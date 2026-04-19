@@ -101,14 +101,13 @@ const techLogos = [
       ))}
     </div>
 
-    <!-- Avatar - icon.webp -->
+    <!-- Avatar - misma forma circular que navbar con tilt effect -->
     <div class="mb-4 sm:mb-8 mt-8 sm:mt-12 w-fit mx-auto reveal reveal-delay-1">
-      <div class="tilt-card border-2 border-[#00E5FF] overflow-hidden relative z-10" style="box-shadow: 4px 4px 0 #00E5FF;">
+      <div class="tilt-card w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full border-2 border-[#00E5FF] flex items-center justify-center overflow-hidden" style="box-shadow: 4px 4px 0 #00E5FF;">
         <img 
-          src={`${baseUrl}icon.webp`} 
+          src={`${baseUrl}my-logo.png`} 
           alt="AlecDev" 
-          class="w-20 h-20 sm:w-28 sm:h-28 md:w-40 md:h-40 object-contain"
-          style="image-rendering: pixelated;"
+          class="w-full h-full object-cover"
           loading="lazy"
           decoding="async"
         />

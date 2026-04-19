@@ -126,7 +126,9 @@ const structuredData = {
     <!-- ============================================
          FAVICON
          ============================================ -->
-    <link rel="icon" type="image/svg+xml" href={`${baseUrl}${siteConfig.favicon}`} />
+    <link rel="icon" type="image/png" sizes="32x32" href={`${baseUrl}${siteConfig.favicon}`} />
+    <link rel="icon" type="image/png" sizes="64x64" href={`${baseUrl}${siteConfig.favicon}`} />
+    <link rel="icon" type="image/png" sizes="128x128" href={`${baseUrl}${siteConfig.favicon}`} />
     <link rel="apple-touch-icon" href={`${baseUrl}${siteConfig.favicon}`} />
     
     <!-- ============================================
@@ -156,11 +158,18 @@ const structuredData = {
 </html>
 
 <script>
+      let scrollObserver: IntersectionObserver | null = null;
+
       /**
        * Scroll Reveal - Animaciones al hacer scroll
        */
       function initScrollReveal() {
-        const observer = new IntersectionObserver((entries) => {
+        // Limpiar observer anterior si existe
+        if (scrollObserver) {
+          scrollObserver.disconnect();
+        }
+
+        scrollObserver = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
             if (entry.isIntersecting) {
               entry.target.classList.add('visible');
@@ -169,7 +178,7 @@ const structuredData = {
         }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
         document.querySelectorAll('.reveal, .reveal-fade, .reveal-scale, .stagger-children').forEach(el => {
-          observer.observe(el);
+          scrollObserver!.observe(el);
         });
       }
 
@@ -181,8 +190,12 @@ const structuredData = {
         const tiltCards = document.querySelectorAll('.tilt-card');
 
         tiltCards.forEach(card => {
+          // Remover listeners anteriores para evitar duplicados
+          card.replaceWith(card.cloneNode(true));
+
+          const cardClone = card as HTMLElement;
           const handleMouseMove = (e: MouseEvent) => {
-            const rect = (card as HTMLElement).getBoundingClientRect();
+            const rect = cardClone.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
             
@@ -192,17 +205,17 @@ const structuredData = {
             const rotateX = ((y - centerY) / centerY) * -10;
             const rotateY = ((x - centerX) / centerX) * 10;
             
-            (card as HTMLElement).style.transform = 
+            cardClone.style.transform = 
               `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
           };
 
           const handleMouseLeave = () => {
-            (card as HTMLElement).style.transform = 
+            cardClone.style.transform = 
               'perspective(1000px) rotateX(0deg) rotateY(0deg)';
           };
 
-          card.addEventListener('mousemove', handleMouseMove);
-          card.addEventListener('mouseleave', handleMouseLeave);
+          cardClone.addEventListener('mousemove', handleMouseMove);
+          cardClone.addEventListener('mouseleave', handleMouseLeave);
         });
       }
 

@@ -46,34 +46,50 @@ const projects = [
 
 /** URL base del sitio (importante para GitHub Pages) */
 const baseUrl = import.meta.env.BASE_URL;
+
+// Obtener query de búsqueda desde URL
+const url = new URL(Astro.request.url);
+const searchQuery = url.searchParams.get('q')?.toLowerCase() || '';
+
+// Filtrar proyectos si hay query
+const filteredProjects = searchQuery
+  ? projects.filter(p => p.title.toLowerCase().includes(searchQuery))
+  : projects;
 ---
 
 <Layout 
   title={pages.proyectos.title}
   description={pages.proyectos.description}
 >  <PixelNav />
-  
-  <main class="relative min-h-screen">
+   
+  <main class="relative min-h-screen pt-20 sm:pt-24">
     <section class="py-8 sm:py-12 px-3 sm:px-4">
       <div class="max-w-lg mx-auto">
         <div class="text-center mb-8 sm:mb-12">
           <h1 class="font-pixel text-xl sm:text-2xl md:text-3xl text-[#FFFFFF] mb-2 sm:mb-4">
-            PROYECTOS
+            {searchQuery ? `BUSCANDO: "${searchQuery.toUpperCase()}"` : 'PROYECTOS'}
           </h1>
           <p class="font-pixel text-[10px] sm:text-xs text-[#888888]">
-            Mis trabajos y creaciones
+            {searchQuery 
+              ? `${filteredProjects.length} resultado${filteredProjects.length !== 1 ? 's' : ''} encontrado${filteredProjects.length !== 1 ? 's' : ''}` 
+              : 'Mis trabajos y criaturas'}
           </p>
         </div>
 
-        {projects.length === 0 ? (
-          <div class="text-center py-16 sm:py-20">
-            <p class="font-pixel text-xs sm:text-sm text-[#888888]">
-              Sin proyectos aún
+{filteredProjects.length === 0 ? (
+          <div className="text-center py-16 sm:py-20">
+            <p className="font-pixel text-xs sm:text-sm text-[#888888]">
+              {searchQuery ? `No se encontraron proyectos con "${searchQuery}"` : 'Sin proyectos aún'}
             </p>
+            {searchQuery && (
+              <a href={`${baseUrl}proyectos/`} className="font-pixel text-xs text-[#00E5FF] hover:text-[#FFE500] mt-2 inline-block">
+                Ver todos los proyectos →
+              </a>
+            )}
           </div>
         ) : (
-          <div class="space-y-6 sm:space-y-8">
-            {projects.map((project) => (
+          <div className="space-y-6 sm:space-y-8">
+            {filteredProjects.map((project) => (
               <ProjectCard 
                 client:load 
                 project={project} 

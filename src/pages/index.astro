@@ -9,6 +9,8 @@ import Layout from '../layouts/Layout.astro';
 import PixelNav from '../components/sections/PixelNav.astro';
 import HeroSection from '../components/sections/HeroSection.astro';
 import StatsCarousel from '../components/features/StatsCarousel';
+import StackTecnologico from '../components/sections/StackTecnologico.astro';
+import ProyectosCTA from '../components/sections/ProyectosCTA.astro';
 import Footer from '../components/sections/Footer.astro';
 import { pages } from '../config/seo';
 
@@ -33,6 +35,12 @@ const baseUrl = import.meta.env.BASE_URL;
     
     <!-- Perfil estilo consola: datos y bio (carrusel 3D) -->
     <StatsCarousel client:load baseUrl={baseUrl} />
+    
+    <!-- Stack Tecnológico -->
+    <StackTecnologico />
+    
+    <!-- CTA Proyectos -->
+    <ProyectosCTA />
   </main>
   
   <!-- Pie de página con copyright y decoración pixel. -->

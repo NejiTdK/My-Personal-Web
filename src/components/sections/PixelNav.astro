@@ -1,47 +1,242 @@
 ---
 /**
  * Navegación principal pixelada del sitio.
- * Aparece fija en la parte superior con estilo retro 8-bit.
+ * Aparece flotante en la parte superior con estilo retro 8-bit.
+ * Layout: Logo(izq) | Links(centro) | Buscador(der)
  */
-const isIndex = Astro.url.pathname === import.meta.env.BASE_URL;
 const baseUrl = import.meta.env.BASE_URL;
+const currentPath = Astro.url.pathname;
 
-// Items de navegación con lógica de URLs para index vs otras páginas
+// Links de navegación - siempre usar URLs absolutas con hash
 const navItems = [
   { label: 'INICIO', href: baseUrl },
-  { label: 'SOBRE MÍ', href: isIndex ? '#sobre-mi' : `${baseUrl}#sobre-mi` },
+  { label: 'SOBRE MÍ', href: `${baseUrl}#sobre-mi` },
+  { label: 'STACK', href: `${baseUrl}#stack` },
   { label: 'PROYECTOS', href: `${baseUrl}proyectos/` },
+];
+
+// Proyectos para-autocomplete en búsqueda - mismo orden que proyectos.astro
+const projects = [
+  { name: 'Prototipo Landing', slug: 'prototipo-landing' },
 ];
 ---
 
-<!-- Navegación fija superior con borde pixelado cyan -->
-<nav class="absolute top-2 sm:top-4 left-1/2 -translate-x-1/2 z-50 bg-[#000000] border-2 border-[#00E5FF] px-3 sm:px-6 py-2 sm:py-3" style="border-radius: 2px; box-shadow: 4px 4px 0 #00E5FF;">
-  <div class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-8">
-    <!-- Logo + Marca -->
-    <a href={baseUrl} class="flex items-center gap-2 sm:gap-3 hover:scale-105 transition-transform">
-      <img 
-        src={`${baseUrl}logo.png`} 
-        alt="AlecDev Logo"
-        class="w-8 h-8 sm:w-10 sm:h-10 object-contain"
-      />
-      <span class="font-pixel text-xs sm:text-sm text-[#FFFFFF]">
+<!-- Navbar flotante con bordes redondeados pixel -->
+<nav class="fixed top-2 sm:top-4 left-1/2 -translate-x-1/2 z-50 bg-[#000000] border-2 border-[#00E5FF] px-4 sm:px-6 py-2 sm:py-3" style="border-radius: 8px; box-shadow: 4px 4px 0 #00E5FF;">
+  <div class="flex items-center justify-between gap-4 max-w-7xl mx-auto">
+    <!-- Logo + Marca (izquierda) con forma circular -->
+    <a href={baseUrl} class="flex items-center gap-2 sm:gap-3 hover:scale-105 transition-transform shrink-0">
+      <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-[#00E5FF] flex items-center justify-center overflow-hidden" style="box-shadow: 2px 2px 0 #00E5FF;">
+        <img
+          src={`${baseUrl}my-logo.png`}
+          alt="AlecDev Logo"
+          class="w-full h-full object-cover"
+        />
+      </div>
+      <span class="font-pixel text-xs sm:text-sm text-[#FFFFFF] hidden sm:block">
         ALEC<span class="text-[#00E5FF]">DEV</span>
       </span>
     </a>
 
-    <!-- Links de navegación con hover effect -->
-    <ul class="flex gap-3 sm:gap-6">
-      {navItems.map((item) => (
-        <li>
-          <a 
-            href={item.href}
-            class="font-pixel text-[10px] sm:text-xs text-[#FFFFFF] hover:text-[#FFE500] transition-colors relative group"
-          >
-            {item.label}
-            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#FFE500] transition-all group-hover:w-full"></span>
-          </a>
-        </li>
-      ))}
+    <!-- Links centrales (desktop) -->
+    <ul class="hidden md:flex items-center gap-4 sm:gap-6">
+      {navItems.map((item) => {
+        const isActive = item.href === currentPath || item.href === '#' + currentPath.split('#')[1];
+        return (
+          <li>
+            <a
+              href={item.href}
+              class:list={[
+                "font-pixel text-[10px] sm:text-xs transition-all relative group",
+                isActive ? "text-[#00E5FF]" : "text-[#FFFFFF] hover:text-[#FFE500] hover:scale-105"
+              ]}
+            >
+              {item.label}
+              <span class:list={[
+                "absolute -bottom-1 left-0 h-0.5 bg-[#00E5FF] transition-all",
+                isActive ? "w-full" : "w-0 group-hover:w-full"
+              ]}></span>
+            </a>
+          </li>
+        );
+      })}
     </ul>
+
+    <!-- Barra de búsqueda (desktop) -->
+    <div class="hidden md:block relative" id="search-container">
+      <div class="relative flex items-center">
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Buscar proyectos..."
+          class="bg-[#000000] border-2 border-[#00E5FF] px-4 py-2 text-xs font-pixel text-[#FFFFFF] placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-[#FFE500] w-48"
+          style="border-radius: 4px;"
+          autocomplete="off"
+        />
+        <button 
+          type="button"
+          id="search-btn"
+          class="absolute right-1 top-1 bottom-1 px-2 bg-[#00E5FF] hover:bg-[#FFE500] transition-colors flex items-center justify-center"
+          style="border-radius: 2px;"
+          aria-label="Buscar"
+        >
+          <span class="text-[#000000] text-xs">🔍</span>
+        </button>
+      </div>
+      <!-- Sugerencias dropdown -->
+      <div id="search-suggestions" class="hidden absolute top-full left-0 right-0 mt-1 bg-[#000000] border-2 border-[#00E5FF] max-h-48 overflow-y-auto z-50" style="box-shadow: 4px 4px 0 #00E5FF; border-radius: 4px;">
+      </div>
+    </div>
+
+    <!-- Botón hamburger (mobile) -->
+    <button
+      id="hamburger-btn"
+      class="md:hidden text-[#00E5FF] text-xl p-1"
+      aria-label="Menú"
+    >
+      ☰
+    </button>
   </div>
 </nav>
+
+<!-- Mobile menu desplegable -->
+<div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 right-0 bg-[#000000] border-2 border-[#00E5FF] p-4 mt-1" style="border-radius: 8px; box-shadow: 4px 4px 0 #00E5FF;">
+  <ul class="flex flex-col gap-4 mb-4">
+    {navItems.map((item) => {
+      const isActive = item.href === currentPath || item.href === '#' + currentPath.split('#')[1];
+      return (
+        <li>
+          <a
+            href={item.href}
+            class:list={[
+              "font-pixel text-xs transition-all relative",
+              isActive ? "text-[#00E5FF]" : "text-[#FFFFFF] hover:text-[#FFE500]"
+            ]}
+          >
+            {item.label}
+            {isActive && <span class="absolute -bottom-1 left-0 w-full h-0.5 bg-[#00E5FF]"></span>}
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+  <!-- Buscador mobile -->
+  <div class="relative">
+    <input
+      type="text"
+      id="search-input-mobile"
+      placeholder="Buscar proyectos..."
+      class="w-full bg-[#000000] border-2 border-[#00E5FF] px-3 py-2 text-xs font-pixel text-[#FFFFFF] placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-[#FFE500]"
+      style="border-radius: 4px;"
+      autocomplete="off"
+    />
+    <button 
+      type="button"
+      class="absolute right-1 top-1 bottom-1 px-2 bg-[#00E5FF] flex items-center justify-center"
+      style="border-radius: 2px;"
+    >
+      <span class="text-[#000000] text-xs">🔍</span>
+    </button>
+  </div>
+</div>
+
+<!-- Script para toggle menu y búsqueda con sugerencias -->
+<script define:vars={{ projects, baseUrl }}>
+  // Función principal que se ejecuta en cada load de página
+  function initNavbar() {
+    // Toggle hamburger menu
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (hamburgerBtn && mobileMenu) {
+      hamburgerBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        mobileMenu.classList.toggle('hidden');
+      });
+    }
+
+    // Función para mostrar sugerencias
+    function showSuggestions(query, suggestionsEl) {
+      if (!suggestionsEl) return;
+      
+      if (query.length === 0) {
+        suggestionsEl.classList.add('hidden');
+        suggestionsEl.innerHTML = '';
+        return;
+      }
+
+      // Filtrar proyectos por nombre
+      const matches = projects.filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
+      
+      if (matches.length > 0) {
+        suggestionsEl.innerHTML = matches.map(p => 
+          `<a href="${baseUrl}proyectos/?q=${encodeURIComponent(p.name.toLowerCase())}" class="block px-4 py-2 font-pixel text-xs text-[#FFFFFF] hover:bg-[#00E5FF] hover:text-[#000000]">${p.name}</a>`
+        ).join('');
+        suggestionsEl.classList.remove('hidden');
+      } else {
+        suggestionsEl.innerHTML = `<div class="px-4 py-2 font-pixel text-xs text-[#888888]">Sin resultados</div>`;
+        suggestionsEl.classList.remove('hidden');
+      }
+    }
+
+    // Función de búsqueda final
+    function doSearch(input) {
+      const query = input.value.toLowerCase().trim();
+      if (query) {
+        window.location.href = `${baseUrl}proyectos/?q=${encodeURIComponent(query)}`;
+      } else {
+        window.location.href = `${baseUrl}proyectos/`;
+      }
+    }
+
+    // Búsqueda desktop con sugerencias
+    const searchInput = document.getElementById('search-input');
+    const searchBtn = document.getElementById('search-btn');
+    const suggestionsEl = document.getElementById('search-suggestions');
+    
+    if (searchInput && suggestionsEl) {
+      // Mostrar sugerencias al escribir
+      searchInput.addEventListener('input', (e) => {
+        showSuggestions(e.target.value, suggestionsEl);
+      });
+
+      // Click en botón buscar
+      if (searchBtn) {
+        searchBtn.addEventListener('click', () => doSearch(searchInput));
+      }
+
+      // Enter para buscar
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          doSearch(searchInput);
+        }
+      });
+
+      // Ocultar sugerencias al hacer click fuera
+      document.addEventListener('click', (e) => {
+        const container = document.getElementById('search-container');
+        if (container && !container.contains(e.target)) {
+          suggestionsEl.classList.add('hidden');
+        }
+      });
+    }
+
+    // Búsqueda mobile
+    const searchInputMobile = document.getElementById('search-input-mobile');
+    const searchBtnMobile = document.querySelector('#mobile-menu button:last-child');
+    
+    if (searchInputMobile && searchBtnMobile) {
+      searchBtnMobile.addEventListener('click', () => doSearch(searchInputMobile));
+      searchInputMobile.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          doSearch(searchInputMobile);
+        }
+      });
+    }
+  }
+
+  // Ejecutar en cada page load de Astro (para client-side nav)
+  document.addEventListener('astro:page-load', initNavbar);
+</script>
