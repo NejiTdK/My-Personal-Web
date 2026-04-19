@@ -2,8 +2,8 @@
 
 | | |
 |---|---|
-| **Versión** | 1.2.0 |
-| **Última actualización** | 2026-04-12 |
+| **Versión** | 1.3.0 |
+| **Última actualización** | 2026-04-19 |
 | **Estado** | Activo |
 
 Sitio estático de portafolio con estética **retro / pixel art** y tipografía **Press Start 2P**. Está construido con **Astro 6** + **React 19** y **Tailwind CSS 4** (integración mediante **Vite**).
@@ -59,8 +59,10 @@ Mi Web/
 │   ├── favicon.svg       # Favicon alternativo
 │   ├── favicon.ico       # Favicon legacy
 │   ├── logo.png          # Logo del portafolio
-│   ├── icon.webp         # Avatar del héroe
-│   ├── projects/         # Imágenes de proyectos
+│   ├── my-logo.png      # Logo principal para navbar y hero
+│   ├── DEV-LOGO.png    # Logo alternativo
+│   ├── icon.webp        # Avatar anterior del héroe
+│   ├── projects/        # Imágenes de proyectos
 │   │   └── proyecto-a-large.webp
 │   └── demos/            # Demos HTML de proyectos (para Live Preview)
 │       └── prototipo-landing/
@@ -74,9 +76,11 @@ Mi Web/
     │   └── proyectos.astro # Ruta "/proyectos" - Galería
     ├── components/
     │   ├── sections/      # Componentes de sección específicos
-    │   │   ├── PixelNav.astro      # Barra de navegación fija
-    │   │   ├── HeroSection.astro   # Sección hero con avatar
-    │   │   ├── StatsSection.astro  # Sección "Sobre mí" con carrusel 3D
+    │   │   ├── PixelNav.astro      # Barra de navegación flotante
+    │   │   ├── HeroSection.astro   # Sección hero con avatar circular
+    │   │   ├── StatsCarousel.tsx   # Sección "Sobre mí" con carrusel 3D (React)
+    │   │   ├── StackTecnologico.astro # Stack tecnológico con iconos pixel
+    │   │   ├── ProyectosCTA.astro # CTA de proyectos con animación
     │   │   └── Footer.astro        # Pie de página
     │   ├── features/      # Componentes React de features específicas
     │   │   ├── ProjectCard.tsx     # Tarjeta de proyecto
@@ -150,10 +154,11 @@ Los tokens están definidos en `src/styles/global.css` usando `@theme` de Tailwi
 
 | Ruta | Archivo | Contenido |
 |------|---------|-----------|
-| `/` | `src/pages/index.astro` | Navegación, héroe (presentación), sección "Sobre mí" con carrusel 3D, pie. |
-| `/proyectos` | `src/pages/proyectos.astro` | Grid de proyectos con tarjetas React, Live Preview modal para demos. |
+| `/` | `src/pages/index.astro` | Navbar flotante, héroe, Sobre Mí (carrusel), Stack tecnológico, CTA Proyectos, Footer. |
+| `/proyectos` | `src/pages/proyectos.astro` | Grid de proyectos con tarjetas React, búsqueda con query `?q=`, Live Preview. |
 
-El **file-based routing** de Astro convierte cada archivo en `src/pages/` en una URL.
+Parámetros de URL (proyectos):
+- `?q=<texto>` - Filtra proyectos por título
 
 ---
 
@@ -168,22 +173,52 @@ El **file-based routing** de Astro convierte cada archivo en `src/pages/` en una
 
 ### `PixelNav.astro` (en `sections/`)
 
-Barra **fija** superior con logo, marca **ALECDEV** y enlaces:
-- **INICIO** → `/`
-- **SOBRE MÍ** → `#sobre-mi` en home, o `/#sobre-mi` en otras rutas
-- **PROYECTOS** → `/proyectos`
+Barra **flotante** superior (position: fixed) con:
+- Logo circular con borde cyan
+- Marca **ALECDEV**
+- Enlaces: **INICIO** → `/`, **SOBRE MÍ** → `/#sobre-mi`, **STACK** → `/#stack`, **PROYECTOS** → `/proyectos`
+- Buscador funcional con sugerencias (autocomplete)
+- Menú hamburguesa para mobile
+
+Características:
+- Estilo pixel con box-shadow
+- Border-radius: 8px
+- Hover effects con scale y color amber
 
 ### `HeroSection.astro` (en `sections/`)
 
-Sección **pantalla completa** (`#inicio`): avatar `/icon.webp`, título, rol, tagline, botón a `#sobre-mi`, indicador de scroll y **sprites flotantes** de tecnologías (HTML, CSS, JS, Astro, React, MySQL) con animaciones.
+Sección **pantalla completa** (`#inicio`):
+- Avatar **circular** con `/my-logo.png` y efecto tilt
+- Título **ALECDEV** con acentos cyan
+- Rol profesional en tarjeta
+- Tagline descriptiva
+- Botón a `#sobre-mi`
+- Indicador de scroll animación
+- Sprites flotantes de tecnologías (HTML, CSS, JS, Astro, React, MySQL)
 
-### `StatsSection.astro` (en `sections/`)
+### `StatsCarousel.tsx` (en `features/`)
 
-Sección **`#sobre-mi`** con dos layouts:
+Sección **`#sobre-mi`** implementada como componente React:
 - **Mobile**: grid de tarjetas apiladas (perfil + bios)
 - **Desktop**: **carrusel 3D** con efecto de profundidad (escala, opacidad, posición)
+- Navegación por botones y teclado (flechas)
+- Tarjetas más grandes (`w-[28rem]`) con fuentes reducidas
 
-Incluye script con navegación por botones y teclado (flechas).
+### `StackTecnologico.astro` (en `sections/`)
+
+Sección **`#stack`** con iconos pixel de tecnologías:
+- HTML, CSS (Tailwind), JS, React, Astro
+- Iconos SVG estilo pixel con colores oficiales
+- Descripciones breves por tecnología
+- Borde y box-shadow pixel
+
+### `ProyectosCTA.astro` (en `sections/`)
+
+CTA después del Stack con animación:
+- Título "¿QUIERES VER MÁS?"
+- Botón grande con efectos de hover
+- Pulso de luz debajo al hacer hover
+- Decoraciones pixel animadas
 
 ### `Footer.astro` (en `sections/`)
 
@@ -382,6 +417,17 @@ En los archivos fuente se añadieron comentarios que describen:
 
 ## Changelog
 
+### v1.3.0 (2026-04-19)
+- ✅ Nuevo navbar flotante con estilo pixel
+- ✅ Logo circular con tilt effect
+- ✅ Buscador funcional con sugerencias en navbar
+- ✅ Nueva sección Stack Tecnológico con iconos pixel
+- ✅ CTA Proyectos con animación de pulso
+- ✅ Bug fixes: navegación #sobre-mi/#stack funciona desde cualquier página
+- ✅ View Transitions con cleanup de observers
+- ✅ Reordenado: navbar (Inicio → Sobre Mí → Stack → Proyectos)
+- ✅ Agregado padding a proyectos.astro para evitar overlap
+
 ### v1.2.0 (2026-04-12)
 - ✅ Renombrado package.json de `temp-project` a `alecdev-portafolio`
 - ✅ Actualizado README.md con información completa del proyecto
@@ -398,4 +444,4 @@ En los archivos fuente se añadieron comentarios que describen:
 
 ---
 
-*Documentación actualizada tras refactorización de arquitectura y adición de testing.*
+*Documentación actualizada tras refactorización del navbar, adición de Stack Tecnológico y CTA de proyectos.*
