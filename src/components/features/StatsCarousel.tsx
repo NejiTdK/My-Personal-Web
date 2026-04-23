@@ -2,7 +2,7 @@
  * Carrusel 3D "Sobre Mí" - Componente React
  * Muestra datos de perfil y párrafos de biografía con efecto de profundidad.
  */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 
 // Datos básicos del perfil
 const profileData = [
@@ -36,6 +36,37 @@ const allCards: CarouselCard[] = [
     index: i + 1,
   })),
 ];
+
+// ============================================
+// Hook para efecto tilt en cards
+// ============================================
+function useCardTilt() {
+  const ref = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const el = ref.current;
+    if (!el) return;
+
+    const rect = el.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotateX = ((y - centerY) / centerY) * -10;
+    const rotateY = ((x - centerX) / centerX) * 10;
+
+    el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+  }, []);
+
+  return { ref, handleMouseMove, handleMouseLeave };
+}
 
 interface StatsCarouselProps {
   baseUrl: string;
@@ -120,6 +151,7 @@ export default function StatsCarousel({ baseUrl }: StatsCarouselProps) {
   // Renderiza una card individual
   const renderCard = (card: CarouselCard, index: number) => {
     const isProfile = card.type === 'profile';
+    const tilt = useCardTilt();
 
     return (
       <div
@@ -134,39 +166,44 @@ export default function StatsCarousel({ baseUrl }: StatsCarouselProps) {
           willChange: 'transform, opacity',
         }}
       >
-        <div className="tilt-card w-full h-full">
-          {isProfile ? (
-            <div 
-              className="bg-[#0a0a0a] border-2 border-[#00E5FF] p-6 w-[28rem] overflow-hidden"
-              style={{ boxShadow: '4px 4px 0 #00E5FF', height: '440px' }}
-            >
-              <div className="flex items-center gap-2 mb-4 border-b border-[#333] pb-3">
-                <span className="text-[#00E5FF]">◉</span>
-                <h3 className="font-pixel text-[10px] text-[#00E5FF]">PERFIL</h3>
-              </div>
-              <div className="space-y-3">
-                {card.data.map((item, i) => (
-                  <div key={i} className="flex flex-row items-center gap-2 font-pixel text-[10px]">
-                    <span className="text-[#00E5FF] w-24 flex-shrink-0">{item.label}:</span>
-                    <span className="text-[#FFFFFF]">{item.value}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <div 
-              className="bg-[#0a0a0a] border-2 border-[#00E5FF] p-6 w-[28rem] overflow-hidden"
-              style={{ boxShadow: '4px 4px 0 #00E5FF', height: '440px' }}
-            >
-              <div className="flex items-center gap-2 mb-4 border-b border-[#333] pb-3">
-                <span className="text-[#FFE500]">♦</span>
-                <span className="font-pixel text-[10px] text-[#FFE500]">BIO-{card.index}</span>
-              </div>
-              <p className="font-pixel text-xs text-[#888888] leading-relaxed overflow-y-auto h-[340px]">
-                {card.data}
-              </p>
-            </div>
-          )}
+        <div
+          ref={tilt.ref}
+          onMouseMove={tilt.handleMouseMove}
+          onMouseLeave={tilt.handleMouseLeave}
+          className="w-full h-full"
+          style={{ transformStyle: 'preserve-3d' }}
+        >
+          <div
+            className="bg-[#0a0a0a] border-2 border-[#00E5FF] p-6 w-[28rem] overflow-hidden"
+            style={{ boxShadow: '4px 4px 0 #00E5FF', height: '440px' }}
+          >
+            {isProfile ? (
+              <>
+                <div className="flex items-center gap-2 mb-4 border-b border-[#333] pb-3">
+                  <span className="text-[#00E5FF]">◉</span>
+                  <h3 className="font-pixel text-[10px] text-[#00E5FF]">PERFIL</h3>
+                </div>
+                <div className="space-y-3">
+                  {card.data.map((item, i) => (
+                    <div key={i} className="flex flex-row items-center gap-2 font-pixel text-[10px]">
+                      <span className="text-[#00E5FF] w-24 flex-shrink-0">{item.label}:</span>
+                      <span className="text-[#FFFFFF]">{item.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center gap-2 mb-4 border-b border-[#333] pb-3">
+                  <span className="text-[#FFE500]">♦</span>
+                  <span className="font-pixel text-[10px] text-[#FFE500]">BIO-{card.index}</span>
+                </div>
+                <p className="font-pixel text-xs text-[#888888] leading-relaxed overflow-y-auto h-[340px]">
+                  {card.data}
+                </p>
+              </>
+            )}
+          </div>
         </div>
       </div>
     );
@@ -175,56 +212,54 @@ export default function StatsCarousel({ baseUrl }: StatsCarouselProps) {
   // Renderiza las cards para mobile (stacked)
   const renderMobileCards = () => (
     <div className="block sm:hidden space-y-3">
-      {allCards.map((card, index) => (
-        <div 
-          key={index}
-          className="tilt-card bg-[#0a0a0a] border-2 border-[#00E5FF] p-4 w-full mx-auto"
-          style={{ boxShadow: '4px 4px 0 #00E5FF' }}
-        >
-          {card.type === 'profile' ? (
-            <>
-<div className="flex items-center gap-2 mb-3 border-b border-[#333] pb-2">
-                <span className="text-[#00E5FF]">◉</span>
-                <h3 className="font-pixel text-[10px] text-[#00E5FF]">PERFIL</h3>
-              </div>
-              <div className="space-y-2">
-                {card.data.map((item, i) => (
-                  <div key={i} className="flex flex-row items-center gap-2 font-pixel text-[10px]">
-                    <span className="text-[#00E5FF] w-24 flex-shrink-0">{item.label}:</span>
-                    <span className="text-[#FFFFFF]">{item.value}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="space-y-2">
-                {card.data.map((item, i) => (
-                  <div key={i} className="flex flex-row items-center gap-2 font-pixel text-[10px]">
-                    <span className="text-[#00E5FF] w-24 flex-shrink-0">{item.label}:</span>
-                    <span className="text-[#FFFFFF]">{item.value}</span>
-                  </div>
-                ))}
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="flex items-center gap-2 mb-3 border-b border-[#333] pb-2">
-                <span className="text-[#FFE500]">♦</span>
-                <span className="font-pixel text-[10px] text-[#FFE500]">BIO-{card.index}</span>
-              </div>
-              <p className="font-pixel text-[10px] text-[#888888] leading-relaxed">
-                {card.data}
-              </p>
-            </>
-          )}
-        </div>
-      ))}
+      {allCards.map((card, index) => {
+        const tilt = useCardTilt();
+        return (
+          <div
+            key={index}
+            ref={tilt.ref}
+            onMouseMove={tilt.handleMouseMove}
+            onMouseLeave={tilt.handleMouseLeave}
+            className="bg-[#0a0a0a] border-2 border-[#00E5FF] p-4 w-full mx-auto"
+            style={{ boxShadow: '4px 4px 0 #00E5FF', transformStyle: 'preserve-3d' }}
+          >
+            {card.type === 'profile' ? (
+              <>
+                <div className="flex items-center gap-2 mb-3 border-b border-[#333] pb-2">
+                  <span className="text-[#00E5FF]">◉</span>
+                  <h3 className="font-pixel text-[10px] text-[#00E5FF]">PERFIL</h3>
+                </div>
+                <div className="space-y-2">
+                  {card.data.map((item, i) => (
+                    <div key={i} className="flex flex-row items-center gap-2 font-pixel text-[10px]">
+                      <span className="text-[#00E5FF] w-24 flex-shrink-0">{item.label}:</span>
+                      <span className="text-[#FFFFFF]">{item.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center gap-2 mb-3 border-b border-[#333] pb-2">
+                  <span className="text-[#FFE500]">♦</span>
+                  <span className="font-pixel text-[10px] text-[#FFE500]">BIO-{card.index}</span>
+                </div>
+                <p className="font-pixel text-[10px] text-[#888888] leading-relaxed">
+                  {card.data}
+                </p>
+              </>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 
   // Renderiza el carrusel para desktop
   const renderDesktopCarousel = () => (
     <div className="hidden sm:block relative">
-      <div 
-        id="carousel-container" 
+      <div
+        id="carousel-container"
         className="flex items-center justify-center gap-4 overflow-visible h-[520px]"
       >
         {allCards.map((card, index) => renderCard(card, index))}
@@ -237,7 +272,7 @@ export default function StatsCarousel({ baseUrl }: StatsCarouselProps) {
       >
         <span className="text-[#000000] font-pixel text-sm">◀</span>
       </button>
-      
+
       <button
         onClick={goToNext}
         className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-[#00E5FF] hover:bg-[#FFE500] transition-colors flex items-center justify-center z-10"
