@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Propuestas Navbar - AlecDev Portfolio</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Courier New', monospace;
+      background: #0a0a0a;
+      color: #fff;
+      padding: 40px;
+    }
+    h1 {
+      color: #00E5FF;
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 24px;
+    }
+    .option {
+      background: #000;
+      border: 2px solid #00E5FF;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 4px 4px 0 #00E5FF;
+    }
+    .option h2 {
+      color: #FFE500;
+      font-size: 16px;
+      margin-bottom: 15px;
+    }
+    .navbar-preview {
+      background: #1a1a1a;
+      padding: 15px;
+      margin: 15px 0;
+      border: 2px solid #333;
+      font-size: 12px;
+    }
+    .logo { color: #00E5FF; font-weight: bold; }
+    .link { color: #888; margin: 0 10px; cursor: pointer; }
+    .link:hover { color: #FFE500; }
+    .search { background: #000; border: 2px solid #00E5FF; padding: 5px 10px; color: #888; }
+    .badge {
+      background: #FFE500;
+      color: #000;
+      padding: 2px 8px;
+      font-size: 10px;
+      float: right;
+    }
+    .pros-cons {
+      display: flex;
+      gap: 20px;
+      font-size: 12px;
+    }
+    .pros { color: #00E5FF; }
+    .cons { color: #ff6b6b; }
+    .selected {
+      border-color: #FFE500;
+      box-shadow: 4px 4px 0 #FFE500;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎮 PROPUESTAS PARA LA NAVBAR - ALECDEV</h1>
+
+  <!-- OPCIÓN A -->
+  <div class="option" id="option-a">
+    <h2>OPCIÓN A: Horizontal Compacto <span class="badge">RECOMENDADO</span></h2>
+    <div class="navbar-preview">
+      ┌──────────────────────────────────────────────────────────────┐
+      │ 🖥️ ALECDEV │ INICIO │ SOBRE MÍ │ STACK │ PROYECTOS │ 🔍 │
+      └──────────────────────────────────────────────────────────────┘
+    </div>
+    <div class="pros-cons">
+      <div class="pros">✅ Mantiene estilo flotante<br/>✅ Pulido y minimal<br/>✅ Familiar para usuarios</div>
+      <div class="cons">❌ Similar al actual<br/>❌Poco diferenciador</div>
+    </div>
+  </div>
+
+  <!-- OPCIÓN B -->
+  <div class="option" id="option-b">
+    <h2>OPCIÓN B: Full Top Bar</h2>
+    <div class="navbar-preview">
+      ┌──────────────────────────────────────────────────────────────┐
+      │ 🖥️ ALECDEV  │  INICIO  │  SOBRE MÍ  │  STACK  │ PROYECTOS │ 🔍 │
+      ├──────────────────────────────────────────────────────────────┤
+      │                    HERO SECTION                             │
+      └──────────────────────────────────────────────────────────────┘
+    </div>
+    <div class="pros-cons">
+      <div class="pros">✅ Más presencia visual<br/>✅ Integrada al header<br/>✅ Menos genérico</div>
+      <div class="cons">❌ Ocupa más espacio vertical<br/>❌ Mayor cambio implementación</div>
+    </div>
+  </div>
+
+  <!-- OPCIÓN C -->
+  <div class="option" id="option-c">
+    <h2>OPCIÓN C: Corner Dock</h2>
+    <div class="navbar-preview" style="min-height: 200px; position: relative;">
+      <div style="position: absolute; bottom: 20px; right: 20px; text-align: right;">
+        ┌────────────────────────────────┐
+        │ 🖥️ INICIO │ PROYECTOS │ 🔍 BUSCAR │
+        └────────────────────────────────┘
+      </div>
+    </div>
+    <div class="pros-cons">
+      <div class="pros">✅ Muy distintivo<br/>✅ Estilo terminal DOS<br/>✅ Unique!</div>
+      <div class="cons">❌ No es conventional<br/>❌ Difícil de descubrir</div>
+    </div>
+  </div>
+
+  <!-- OPCIÓN D -->
+  <div class="option" id="option-d">
+    <h2>OPCIÓN D: Vertical Sidebar</h2>
+    <div class="navbar-preview" style="display: flex; gap: 0;">
+      <div style="background: #000; border: 2px solid #00E5FF; padding: 10px; text-align: center;">
+        🖥️<br/>ALEC<br/>DEV
+      </div>
+      <div style="background: #000; border: 2px solid #00E5FF; border-left: none; padding: 10px; flex: 1;">
+        INICIO<br/>SOBRE MÍ<br/>STACK<br/>PROYECTOS<br/>🔍
+      </div>
+    </div>
+    <div class="pros-cons">
+      <div class="pros">✅ Muy distintivo<br/>✅ Estilo menú videojuegos<br/>✅ Deja espacio central</div>
+      <div class="cons">❌ Cambia layout completo<br/>❌ Mobile es complejo</div>
+    </div>
+  </div>
+
+  <div style="text-align: center; margin-top: 40px; color: #888;">
+    <p>📋 Responde con la opción que te gusta más (A, B, C, o D)</p>
+  </div>
+</body>
+</html>

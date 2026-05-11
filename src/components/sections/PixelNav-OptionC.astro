@@ -1,0 +1,239 @@
+---
+/**
+ * Navegación principal pixelada del sitio.
+ * Aparece flotante en la parte superior con estilo retro 8-bit.
+ * Layout: Logo(izq) | Links(centro) | Buscador(der)
+ */
+const baseUrl = import.meta.env.BASE_URL;
+const currentPath = Astro.url.pathname;
+
+// Links de navegación - siempre usar URLs absolutas con hash
+const navItems = [
+  { label: 'INICIO', href: baseUrl },
+  { label: 'SOBRE MÍ', href: `${baseUrl}#sobre-mi` },
+  { label: 'STACK', href: `${baseUrl}#stack` },
+  { label: 'PROYECTOS', href: `${baseUrl}proyectos/` },
+];
+
+// Proyectos para-autocomplete en búsqueda - mismo orden que proyectos.astro
+const projects = [
+  { name: 'Prototipo Landing', slug: 'prototipo-landing' },
+];
+---
+
+<!-- Corner Dock Navbar - Estilo Terminal DOS -->
+<nav class="fixed bottom-4 right-4 z-50" style="max-width: 90vw;">
+  <div class="bg-[#000000] border-2 border-[#00E5FF]" style="box-shadow: 4px 4px 0 #00E5FF; border-radius: 4px;">
+    <!-- Terminal header style -->
+    <div class="bg-[#00E5FF] px-3 py-1 flex items-center justify-between" style="border-bottom: 2px solid #00E5FF;">
+      <span class="text-[#000000] font-pixel text-[8px]">▛ TERMINAL ▚</span>
+      <div class="flex gap-1">
+        <span class="w-2 h-2 bg-[#000000] rounded-sm"></span>
+      </div>
+    </div>
+    
+    <!-- Main content: Links + Search -->
+    <div class="flex items-center gap-2 px-3 py-2">
+      <!-- Links -->
+      <ul class="flex items-center gap-2 sm:gap-3">
+        {navItems.map((item) => {
+          const isActive = item.href === currentPath || item.href === '#' + currentPath.split('#')[1];
+          return (
+            <li>
+              <a
+                href={item.href}
+                class:list={[
+                  "font-pixel text-[8px] sm:text-[10px] transition-all",
+                  isActive ? "text-[#FFE500]" : "text-[#00E5FF] hover:text-[#FFE500]"
+                ]}
+              >
+                [{item.label}]
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+
+      <!-- Search inline -->
+      <div class="relative flex items-center ml-2" id="search-container-inline">
+        <input
+          type="text"
+          id="search-input"
+          placeholder="..."
+          class="bg-[#0a0a0a] border border-[#00E5FF] px-2 py-1 text-[8px] font-pixel text-[#00E5FF] placeholder-gray-600 focus:outline-none w-20 sm:w-24"
+          autocomplete="off"
+        />
+        <button 
+          type="button"
+          id="search-btn"
+          class="ml-1 text-[#00E5FF] hover:text-[#FFE500] transition-colors"
+          aria-label="Buscar"
+        >
+          ▸
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sugerencias dropdown -->
+  <div id="search-suggestions" class="hidden absolute bottom-full right-0 mb-2 bg-[#000000] border-2 border-[#00E5FF] max-h-32 overflow-y-auto z-50" style="box-shadow: 4px 4px 0 #00E5FF; border-radius: 4px;">
+  </div>
+</nav>
+
+<!-- Mobile: Expandir a pantalla completa -->
+<div id="mobile-menu" class="hidden fixed inset-0 z-40 bg-[#000000] p-4">
+  <div class="bg-[#000000] border-2 border-[#00E5FF] h-full" style="box-shadow: 4px 4px 0 #00E5FF; border-radius: 4px;">
+    <!-- Terminal header -->
+    <div class="bg-[#00E5FF] px-3 py-2 flex items-center justify-between" style="border-bottom: 2px solid #00E5FF;">
+      <span class="text-[#000000] font-pixel text-[10px]">▛ TERMINAL ▚</span>
+      <button id="close-mobile" class="text-[#000000] font-pixel text-sm hover:text-[#FFE500]">✕</button>
+    </div>
+    
+    <!-- Menu links -->
+    <ul class="flex flex-col gap-4 p-4">
+      {navItems.map((item) => {
+        const isActive = item.href === currentPath || item.href === '#' + currentPath.split('#')[1];
+        return (
+          <li>
+            <a
+              href={item.href}
+              class:list={[
+                "font-pixel text-sm transition-all block",
+                isActive ? "text-[#FFE500]" : "text-[#00E5FF] hover:text-[#FFE500]"
+              ]}
+            >
+              ▸ {item.label}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+    
+    <!-- Search mobile -->
+    <div class="absolute bottom-4 left-4 right-4">
+      <input
+        type="text"
+        id="search-input-mobile"
+        placeholder="Buscar proyecto..."
+        class="w-full bg-[#0a0a0a] border border-[#00E5FF] px-3 py-2 text-xs font-pixel text-[#00E5FF] placeholder-gray-600 focus:outline-none"
+        autocomplete="off"
+      />
+    </div>
+  </div>
+</div>
+
+<!-- Botón hamburger (mobile only - para abrir el terminal completo) -->
+<button
+  id="hamburger-btn"
+  class="md:hidden fixed bottom-4 right-4 z-30 w-10 h-10 bg-[#000000] border-2 border-[#00E5FF] flex items-center justify-center text-[#00E5FF] text-lg"
+  style="box-shadow: 2px 2px 0 #00E5FF; border-radius: 4px;"
+  aria-label="Menú"
+>
+  ☰
+</button>
+
+<!-- Script para toggle menu y búsqueda con sugerencias -->
+<script define:vars={{ projects, baseUrl }}>
+  // Función principal que se ejecuta en cada load de página
+  function initNavbar() {
+    // Toggle hamburger menu (abre terminal completo en mobile)
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const closeMobileBtn = document.getElementById('close-mobile');
+    
+    if (hamburgerBtn && mobileMenu) {
+      hamburgerBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        mobileMenu.classList.remove('hidden');
+      });
+    }
+    
+    if (closeMobileBtn && mobileMenu) {
+      closeMobileBtn.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+      });
+    }
+
+    // Función para mostrar sugerencias
+    function showSuggestions(query, suggestionsEl) {
+      if (!suggestionsEl) return;
+      
+      if (query.length === 0) {
+        suggestionsEl.classList.add('hidden');
+        suggestionsEl.innerHTML = '';
+        return;
+      }
+
+      // Filtrar proyectos por nombre
+      const matches = projects.filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
+      
+      if (matches.length > 0) {
+        suggestionsEl.innerHTML = matches.map(p => 
+          `<a href="${baseUrl}proyectos/?q=${encodeURIComponent(p.name.toLowerCase())}" class="block px-3 py-2 font-pixel text-[8px] text-[#00E5FF] hover:bg-[#00E5FF] hover:text-[#000000]">▸ ${p.name}</a>`
+        ).join('');
+        suggestionsEl.classList.remove('hidden');
+      } else {
+        suggestionsEl.innerHTML = `<div class="px-3 py-2 font-pixel text-[8px] text-[#888888]">Sin resultados</div>`;
+        suggestionsEl.classList.remove('hidden');
+      }
+    }
+
+    // Función de búsqueda final
+    function doSearch(input) {
+      const query = input.value.toLowerCase().trim();
+      if (query) {
+        window.location.href = `${baseUrl}proyectos/?q=${encodeURIComponent(query)}`;
+      } else {
+        window.location.href = `${baseUrl}proyectos/`;
+      }
+    }
+
+    // Búsqueda desktop con sugerencias
+    const searchInput = document.getElementById('search-input');
+    const searchBtn = document.getElementById('search-btn');
+    const suggestionsEl = document.getElementById('search-suggestions');
+    const searchContainer = document.getElementById('search-container-inline');
+    
+    if (searchInput && suggestionsEl) {
+      // Mostrar sugerencias al escribir
+      searchInput.addEventListener('input', (e) => {
+        showSuggestions(e.target.value, suggestionsEl);
+      });
+
+      // Click en botón buscar
+      if (searchBtn) {
+        searchBtn.addEventListener('click', () => doSearch(searchInput));
+      }
+
+      // Enter para buscar
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          doSearch(searchInput);
+        }
+      });
+
+      // Ocultar sugerencias al hacer click fuera
+      document.addEventListener('click', (e) => {
+        if (searchContainer && !searchContainer.contains(e.target)) {
+          suggestionsEl.classList.add('hidden');
+        }
+      });
+    }
+
+    // Búsqueda mobile (dentro del terminal expanded)
+    const searchInputMobile = document.getElementById('search-input-mobile');
+    
+    if (searchInputMobile) {
+      searchInputMobile.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          doSearch(searchInputMobile);
+        }
+      });
+    }
+  }
+
+  // Ejecutar en cada page load de Astro (para client-side nav)
+  document.addEventListener('astro:page-load', initNavbar);
+</script>

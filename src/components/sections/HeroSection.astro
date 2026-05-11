@@ -23,6 +23,9 @@ const techLogos = [
 ---
 
 <section id="inicio" class="min-h-[85vh] flex items-center justify-center px-3 sm:px-4 relative overflow-hidden py-10 sm:py-12">
+  <!-- Fondo del hero con patrón de puntos -->
+  <div id="hero-bg" class="absolute inset-0 z-0 bg-image" style="opacity: 1;"></div>
+  
   <div class="relative z-10 text-center max-w-4xl w-full">
     
     <!-- Sprites tech flotantes - solo visible en desktop -->
@@ -101,13 +104,14 @@ const techLogos = [
       ))}
     </div>
 
-    <!-- Avatar - misma forma circular que navbar con tilt effect -->
-    <div class="mb-4 sm:mb-8 mt-8 sm:mt-12 w-fit mx-auto reveal reveal-delay-1">
-      <div class="tilt-card w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full border-2 border-[#00E5FF] flex items-center justify-center overflow-hidden" style="box-shadow: 4px 4px 0 #00E5FF;">
+    <!-- Avatar con el nuevo logo -->
+    <div class="mb-2 sm:mb-3 mt-4 sm:mt-6 w-fit mx-auto reveal reveal-delay-1">
+      <div class="tilt-card w-44 h-44 sm:w-56 sm:h-56 md:w-64 md:h-64 flex items-center justify-center">
         <img 
-          src={`${baseUrl}my-logo.png`} 
+          src={`${baseUrl}DEV-LOGO-1.png`} 
           alt="AlecDev" 
-          class="w-full h-full object-cover"
+          class="w-full h-full object-contain"
+          style="filter: drop-shadow(0 0 6px white) drop-shadow(0 0 6px white);"
           loading="lazy"
           decoding="async"
         />
@@ -115,7 +119,7 @@ const techLogos = [
     </div>
 
     <!-- Título principal -->
-    <h1 class="font-pixel text-xl sm:text-2xl md:text-4xl text-[#FFFFFF] mb-3 sm:mb-4 tracking-wider reveal reveal-delay-2">
+    <h1 class="font-pixel text-xl sm:text-2xl md:text-4xl text-[#FFFFFF] mb-2 sm:mb-3 tracking-wider reveal reveal-delay-2">
       ALEC<span class="text-[#00E5FF]">DEV</span>
     </h1>
     
@@ -145,3 +149,27 @@ const techLogos = [
     </div>
   </div>
 </section>
+
+<!-- Script para ocultar fondo después del hero -->
+<script>
+  function handleScroll() {
+    const heroBg = document.getElementById('hero-bg');
+    const sobreMi = document.getElementById('sobre-mi');
+    
+    if (!heroBg) return;
+    
+    if (sobreMi) {
+      const rect = sobreMi.getBoundingClientRect();
+      if (rect.top <= 50) {
+        heroBg.style.opacity = '0';
+      } else {
+        heroBg.style.opacity = '1';
+      }
+    }
+  }
+  
+  document.addEventListener('astro:page-load', () => {
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+  });
+</script>

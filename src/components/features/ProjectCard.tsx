@@ -51,13 +51,12 @@ export default function ProjectCard({ project, baseUrl }: ProjectCardProps) {
       >
         {/* Header: logo + título */}
         <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 border-b border-[#333]">
-          <div className="w-8 h-8 border-2 border-[#00E5FF] overflow-hidden flex-shrink-0">
-            <img 
-              src={`${baseUrl}logo.png`} 
-              alt="AlecDev" 
-              className="w-full h-full object-contain" 
-            />
-          </div>
+          <img 
+            src={`${baseUrl}DEV-LOGO-1.png`} 
+            alt="AlecDev" 
+            className="w-8 h-8 object-contain"
+            style={{ filter: 'drop-shadow(0 0 2px white) drop-shadow(0 0 2px white)' }}
+          />
           <div className="flex-1 min-w-0">
             <p className="font-pixel text-xs text-[#FFFFFF] truncate">
               {project.title.toUpperCase()}
