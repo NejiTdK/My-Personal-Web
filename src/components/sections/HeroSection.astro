@@ -13,12 +13,12 @@ const {
 const baseUrl = import.meta.env.BASE_URL;
 
 const techLogos = [
-  { name: 'HTML', delay: '0s', x: '10%' },
-  { name: 'CSS', delay: '0.2s', x: '25%' },
-  { name: 'JS', delay: '0.4s', x: '40%' },
-  { name: 'Astro', delay: '0.6s', x: '55%' },
-  { name: 'React', delay: '0.8s', x: '70%' },
-  { name: 'MySQL', delay: '1.0s', x: '85%' },
+  { name: 'HTML', delay: '0s', x: '5%', y: '20%' },
+  { name: 'CSS', delay: '0.2s', x: '20%', y: '3%' },
+  { name: 'JS', delay: '0.4s', x: '40%', y: '-5%' },
+  { name: 'Astro', delay: '0.6s', x: '60%', y: '-5%' },
+  { name: 'React', delay: '0.8s', x: '80%', y: '3%' },
+  { name: 'MySQL', delay: '1.0s', x: '95%', y: '20%' },
 ];
 ---
 
@@ -29,11 +29,11 @@ const techLogos = [
   <div class="relative z-10 text-center max-w-4xl w-full">
     
     <!-- Sprites tech flotantes - solo visible en desktop -->
-    <div class="hidden md:flex absolute top-0 left-0 w-full justify-between px-4 pointer-events-none" style="transform: translateY(-20px);">
+    <div class="hidden md:block absolute inset-0 pointer-events-none">
       {techLogos.map((tech) => (
         <div 
-          class="w-10 h-10 float-animation reveal"
-          style={`position: absolute; left: ${tech.x}; animation-delay: ${tech.delay};`}
+          class="w-10 h-10 float-animation"
+          style={`position: absolute; left: ${tech.x}; top: ${tech.y}; animation-delay: ${tech.delay};`}
         >
           {tech.name === 'HTML' && (
             <svg viewBox="0 0 16 16" class="w-full h-full" image-rendering="pixelated">
