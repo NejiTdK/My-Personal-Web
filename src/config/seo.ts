@@ -6,8 +6,8 @@
 export const siteConfig = {
   // Datos principales
   title: 'AlecDev',
-  tagline: 'Desarrollador Front-end',
-  description: 'Portafolio de AlecDev - Desarrollador Front-end JR. Transformando ideas en proyectos con IA y creatividad. Especializado en React, Astro y JavaScript.',
+  tagline: 'Creador de Landing Pages',
+  description: 'Creo landing pages estáticas, rápidas y optimizadas. HTML, CSS, JS. Prototipado y desarrollo web.',
   author: 'AlecDev',
   
   // URLs
@@ -31,13 +31,13 @@ export const siteConfig = {
 
 export const pages = {
   home: {
-    title: 'AlecDev | Desarrollador Front-end',
-    description: 'Portafolio de AlecDev - Desarrollador Front-end JR. Transformando ideas en proyectos con IA y creatividad.',
+    title: 'AlecDev | Creador de Landing Pages',
+    description: 'Creo landing pages estáticas, rápidas y optimizadas para tu negocio.',
     ogImage: 'og-image.png',
   },
   proyectos: {
     title: 'AlecDev | Proyectos',
-    description: 'Explora mis proyectos de desarrollo web. Desde landing pages hasta aplicaciones interactivas con React y Astro.',
+    description: 'Explora mis proyectos de landing pages y sitios estáticos.',
     ogImage: 'og-image.png',
   },
 };

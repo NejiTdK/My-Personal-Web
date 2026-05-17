@@ -14,15 +14,16 @@
   /* ============================================
      PRIMITIVES - Valores base de la paleta
      ============================================ */
-  --color-bg: #000000;
-  --color-surface: #0a0a0a;
+  --color-bg: #0a0a0a;
+  --color-surface: #121212;
   --color-cyan: #00E5FF;
   --color-cyan-dim: #0099AA;
-  --color-yellow: #FFE500;
-  --color-yellow-dim: #CCA300;
+  --color-orange: #FFB30A;
+  --color-orange-dim: #CC8E00;
+  --color-green-neon: #00FF88;
   --color-text: #FFFFFF;
   --color-text-muted: #888888;
-  --color-border: #333333;
+  --color-border: #2a2a2a;
 
   /* ============================================
      SEMANTIC TOKENS - Uso por propósito
@@ -37,25 +38,25 @@
   /* Accent Colors - Estructura vs Interactividad */
   --theme-accent-primary: var(--color-cyan);
   --theme-accent-secondary: var(--color-cyan-dim);
-  --theme-accent-cta: var(--color-yellow);
-  --theme-accent-cta-hover: var(--color-yellow-dim);
+  --theme-accent-cta: var(--color-orange);
+  --theme-accent-cta-hover: var(--color-orange-dim);
 
   /* Text Colors - Jerarquía */
   --theme-text-primary: var(--color-text);
   --theme-text-secondary: var(--color-text-muted);
   --theme-text-heading: var(--color-text);
   --theme-text-link: var(--color-cyan);
-  --theme-text-link-hover: var(--color-yellow);
+  --theme-text-link-hover: var(--color-orange);
 
   /* Borders */
   --theme-border-subtle: var(--color-border);
   --theme-border-accent: var(--color-cyan);
-  --theme-border-cta: var(--color-yellow);
+  --theme-border-cta: var(--color-orange);
 
   /* Interactive States */
   --theme-interactive-default: var(--color-cyan);
-  --theme-interactive-hover: var(--color-yellow);
-  --theme-interactive-active: var(--color-yellow-dim);
+  --theme-interactive-hover: var(--color-orange);
+  --theme-interactive-active: var(--color-orange-dim);
   --theme-interactive-disabled: var(--color-text-muted);
 
   /* ============================================
@@ -90,19 +91,21 @@
 
 :root {
   /* Exponer tokens para CSS vanilla */
-  --color-bg: #000000;
-  --color-surface: #0a0a0a;
+  --color-bg: #0a0a0a;
+  --color-surface: #121212;
   --color-cyan: #00E5FF;
   --color-cyan-dim: #0099AA;
-  --color-yellow: #FFE500;
-  --color-yellow-dim: #CCA300;
+  --color-orange: #FFB30A;
+  --color-orange-dim: #CC8E00;
+  --color-green-neon: #00FF88;
   --color-text: #FFFFFF;
   --color-text-muted: #888888;
-  --color-border: #333333;
+  --color-border: #2a2a2a;
 
   /* Semantic shortcuts */
   --accent-primary: var(--color-cyan);
-  --accent-secondary: var(--color-yellow);
+  --accent-secondary: var(--color-orange);
+  --accent-glow: var(--color-green-neon);
   --text-muted: var(--color-text-muted);
   --border-subtle: var(--color-border);
 }
@@ -139,7 +142,7 @@ body.hero-passed {
    SELECTION & SCROLLBAR
    ============================================ */
 ::selection {
-  background-color: var(--color-yellow);
+  background-color: var(--color-orange);
   color: #000000;
 }
 
@@ -161,10 +164,12 @@ body.hero-passed {
 .float-animation { animation: float 3s ease-in-out infinite; }
 .blink-animation { animation: blink 1s step-end infinite; }
 .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+.glow-cyan { animation: glow-cyan 2s ease-in-out infinite; }
+.glow-green { animation: glow-green 2s ease-in-out infinite; }
 
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
+  50% { transform: translateY(-4px); }
 }
 
 @keyframes blink {
@@ -174,11 +179,21 @@ body.hero-passed {
 
 @keyframes pulse-glow {
   0%, 100% { 
-    box-shadow: 0 0 5px #FFE500, 0 0 10px #FFE500;
+    box-shadow: 0 0 5px #FFB30A, 0 0 10px #FFB30A;
   }
   50% { 
-    box-shadow: 0 0 10px #FFE500, 0 0 20px #FFE500, 0 0 30px #FFE500;
+    box-shadow: 0 0 10px #FFB30A, 0 0 20px #FFB30A, 0 0 30px #FFB30A;
   }
+}
+
+@keyframes glow-cyan {
+  0%, 100% { box-shadow: 0 0 5px var(--color-cyan), 0 0 10px var(--color-cyan); }
+  50% { box-shadow: 0 0 15px var(--color-cyan), 0 0 30px var(--color-cyan); }
+}
+
+@keyframes glow-green {
+  0%, 100% { box-shadow: 0 0 5px var(--color-green-neon), 0 0 10px var(--color-green-neon); }
+  50% { box-shadow: 0 0 15px var(--color-green-neon), 0 0 30px var(--color-green-neon); }
 }
 
 @keyframes fadeIn {

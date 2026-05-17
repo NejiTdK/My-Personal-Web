@@ -55,7 +55,7 @@ const structuredData = {
   ],
   "worksFor": {
     "@type": "Organization",
-    "name": "AlecDev Portfolio"
+    "name": "Freelance"
   }
 };
 ---
@@ -85,7 +85,7 @@ const structuredData = {
     
     <!-- Author y keywords -->
     <meta name="author" content={siteConfig.author} />
-    <meta name="keywords" content="desarrollador front-end, React, Astro, JavaScript, portfolio, web developer, frontend" />
+    <meta name="keywords" content="landing page, desarrollo web, HTML, CSS, JS, prototipado, sitios estáticos, portfolio" />
     
     <!-- Generator (Astro) -->
     <meta name="generator" content={Astro.generator} />
@@ -149,6 +149,9 @@ const structuredData = {
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    
+    <!-- Vanilla Tilt.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.8.1/dist/vanilla-tilt.min.js"></script>
   </head>
   
   <body>
@@ -182,53 +185,36 @@ const structuredData = {
         });
       }
 
-      /**
-       * Efecto tilt 3D para las cards
-       * Solo se aplica a elementos con clase .tilt-card
-       */
+/**
+        * Efecto tilt 3D con VanillaTilt.js
+        * Para elementos con data-tilt attribute
+        */
       function initTiltCards() {
-        const tiltCards = document.querySelectorAll('.tilt-card');
-
-        tiltCards.forEach(card => {
-          // Remover listeners anteriores para evitar duplicados
-          card.replaceWith(card.cloneNode(true));
-
-          const cardClone = card as HTMLElement;
-          const handleMouseMove = (e: MouseEvent) => {
-            const rect = cardClone.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            
-            const rotateX = ((y - centerY) / centerY) * -10;
-            const rotateY = ((x - centerX) / centerX) * 10;
-            
-            cardClone.style.transform = 
-              `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-          };
-
-          const handleMouseLeave = () => {
-            cardClone.style.transform = 
-              'perspective(1000px) rotateX(0deg) rotateY(0deg)';
-          };
-
-          cardClone.addEventListener('mousemove', handleMouseMove);
-          cardClone.addEventListener('mouseleave', handleMouseLeave);
-        });
+        // @ts-ignore - VanillaTilt se carga desde CDN
+        if (typeof VanillaTilt !== 'undefined') {
+          const tiltElements = document.querySelectorAll('[data-tilt]');
+          tiltElements.forEach(el => {
+            // @ts-ignore
+            new VanillaTilt.init(el, {
+              max: parseInt(el.getAttribute('data-tilt-max') || '10'),
+              speed: parseInt(el.getAttribute('data-tilt-speed') || '400'),
+              glare: el.hasAttribute('data-tilt-glare'),
+              'max-glare': parseFloat(el.getAttribute('data-tilt-max-glare') || '0.3'),
+            });
+          });
+        }
       }
 
       // Ejecutar en carga inicial
       document.addEventListener('DOMContentLoaded', () => {
         initScrollReveal();
-        initTiltCards();
+        setTimeout(initTiltCards, 50);
       });
 
       // Ejecutar después de View Transitions
       document.addEventListener('astro:page-load', () => {
         initScrollReveal();
-        initTiltCards();
+        setTimeout(initTiltCards, 50);
       });
     </script>
 

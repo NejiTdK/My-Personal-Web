@@ -1,0 +1,48 @@
+---
+/**
+ * Sección "Sobre Mí" - Diseño limpio con texto a la izquierda e imagen a la derecha.
+ * Texto conciso + imagen con efecto de difuminado hacia el fondo.
+ */
+const baseUrl = import.meta.env.BASE_URL;
+---
+
+<section id="sobre-mi" class="py-16 sm:py-24 px-4 relative overflow-hidden">
+  <div class="max-w-6xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+      
+      <!-- Texto a la izquierda -->
+      <div>
+        <h2 class="font-pixel text-lg sm:text-xl text-[#00E5FF] mb-6">
+          SOBRE MÍ
+        </h2>
+        
+        <div class="space-y-4">
+          <p class="text-[#FFFFFF] text-sm sm:text-base leading-relaxed">
+            Soy un <span class="text-[#00E5FF]">ingeniero en sistemas</span> que se dedica a crear landing pages optimizadas para profesionales y negocios que buscan presencia web de calidad.
+          </p>
+          
+          <p class="text-[#888888] text-sm leading-relaxed">
+            Enfoque en <span class="text-[#00FF88]">simplicidad</span>, <span class="text-[#00FF88]">velocidad</span> y diseño bien trabajado. Cada proyecto está pensado para cumplir con los estándares que mis clientes esperan.
+          </p>
+          
+          <p class="text-[#888888] text-sm leading-relaxed">
+            Sitio estático, cero mantenimiento, carga rápida y listo para convertir visitantes en clientes.
+          </p>
+        </div>
+      </div>
+
+      <!-- Imagen a la derecha -->
+      <div class="relative">
+        <div class="relative aspect-square max-w-sm mx-auto">
+          <img 
+            src={`${baseUrl}sobre-mi.webp`} 
+            alt="Sobre mí" 
+            class="w-full h-full object-contain"
+            style="border-radius: 24px;"
+          />
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

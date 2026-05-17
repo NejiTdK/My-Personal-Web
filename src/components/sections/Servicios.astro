@@ -1,0 +1,116 @@
+---
+/**
+ * Sección de servicios ofrecidos.
+ * Vanilla-tilt.js implementado con estilos originales.
+ */
+---
+
+<section class="py-16 sm:py-24 px-4" id="servicios">
+  <div class="max-w-4xl mx-auto">
+    <h2 class="font-pixel text-lg sm:text-xl text-center text-[#00E5FF] mb-8 sm:mb-12">
+      SERVICIOS
+    </h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Landing Pages -->
+      <div 
+        class="servicio-card group"
+        data-tilt
+        data-tilt-max="20"
+        data-tilt-speed="300"
+        data-tilt-max-glare="0.25"
+      >
+        <div class="text-4xl mb-4 text-center">🏠</div>
+        <h3 class="font-pixel text-sm text-[#FFFFFF] mb-3 text-center group-hover:text-[#00E5FF] transition-colors">
+          LANDING PAGES
+        </h3>
+        <p class="text-[#888888] text-xs sm:text-sm text-center leading-relaxed">
+          Sitios web estáticos, rápidos y optimizados para conversión. HTML, CSS y JS puro.
+        </p>
+        <div class="mt-4 flex flex-wrap justify-center gap-2">
+          <span class="text-[10px] px-2 py-1 bg-[#1a1a1a] text-[#00E5FF] border border-[#2a2a2a]">HTML</span>
+          <span class="text-[10px] px-2 py-1 bg-[#1a1a1a] text-[#00E5FF] border border-[#2a2a2a]">CSS</span>
+          <span class="text-[10px] px-2 py-1 bg-[#1a1a1a] text-[#00E5FF] border border-[#2a2a2a]">JS</span>
+        </div>
+      </div>
+
+      <!-- Prototipado -->
+      <div 
+        class="servicio-card group"
+        data-tilt
+        data-tilt-max="20"
+        data-tilt-speed="300"
+        data-tilt-max-glare="0.25"
+      >
+        <div class="text-4xl mb-4 text-center">✏️</div>
+        <h3 class="font-pixel text-sm text-[#FFFFFF] mb-3 text-center group-hover:text-[#FFB30A] transition-colors">
+          PROTOTIPADO
+        </h3>
+        <p class="text-[#888888] text-xs sm:text-sm text-center leading-relaxed">
+          Transformo tu idea en un mockup funcional. Diseños limpios y listos para implementar.
+        </p>
+        <div class="mt-4 flex flex-wrap justify-center gap-2">
+          <span class="text-[10px] px-2 py-1 bg-[#1a1a1a] text-[#FFB30A] border border-[#2a2a2a]">Figma</span>
+          <span class="text-[10px] px-2 py-1 bg-[#1a1a1a] text-[#FFB30A] border border-[#2a2a2a]">Wireframe</span>
+        </div>
+      </div>
+
+      <!-- Sitios Estáticos -->
+      <div 
+        class="servicio-card group"
+        data-tilt
+        data-tilt-max="20"
+        data-tilt-speed="300"
+        data-tilt-max-glare="0.25"
+      >
+        <div class="text-4xl mb-4 text-center">⚡</div>
+        <h3 class="font-pixel text-sm text-[#FFFFFF] mb-3 text-center group-hover:text-[#00FF88] transition-colors">
+          SITIOS ESTÁTICOS
+        </h3>
+        <p class="text-[#888888] text-xs sm:text-sm text-center leading-relaxed">
+          Blogs, portfolios y páginas corporativas. Performance extrema, cero mantenimiento.
+        </p>
+        <div class="mt-4 flex flex-wrap justify-center gap-2">
+          <span class="text-[10px] px-2 py-1 bg-[#1a1a1a] text-[#00FF88] border border-[#2a2a2a]">Astro</span>
+          <span class="text-[10px] px-2 py-1 bg-[#1a1a1a] text-[#00FF88] border border-[#2a2a2a]">SSG</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Estilos para vanilla-tilt - manteniendo diseño original */
+  .servicio-card {
+    background-color: #121212;
+    border: 2px solid #2a2a2a;
+    padding: 1.5rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    transform-style: preserve-3d;
+    transform: perspective(1000px);
+  }
+
+  /* Colores de borde en hover - cada tarjeta su color con glow */
+  .servicio-card:nth-child(1):hover {
+    border-color: #00E5FF;
+    box-shadow: 0 0 15px rgba(0,229,255,0.3), inset 0 0 15px rgba(0,229,255,0.1);
+  }
+
+  .servicio-card:nth-child(2):hover {
+    border-color: #FFB30A;
+    box-shadow: 0 0 15px rgba(255,179,10,0.3), inset 0 0 15px rgba(255,179,10,0.1);
+  }
+
+  .servicio-card:nth-child(3):hover {
+    border-color: #00FF88;
+    box-shadow: 0 0 15px rgba(0,255,136,0.3), inset 0 0 15px rgba(0,255,136,0.1);
+  }
+
+  .servicio-card:hover h3 {
+    text-shadow: 0 0 10px currentColor;
+  }
+
+  .servicio-card[data-tilt] {
+    will-change: transform;
+  }
+</style>

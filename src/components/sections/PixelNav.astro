@@ -9,9 +9,9 @@ const currentPath = Astro.url.pathname;
 // Links de navegación
 const navItems = [
   { label: 'INICIO', href: baseUrl },
-  { label: 'SOBRE MÍ', href: `${baseUrl}#sobre-mi` },
-  { label: 'STACK', href: `${baseUrl}#stack` },
+  { label: 'SERVICIOS', href: `${baseUrl}#servicios` },
   { label: 'PROYECTOS', href: `${baseUrl}proyectos/` },
+  { label: 'CONTACTO', href: `${baseUrl}#contacto` },
 ];
 
 // Proyectos para autocomplete en búsqueda
@@ -21,14 +21,14 @@ const projects = [
 ---
 
 <!-- Full Top Bar - Barra de navegación estática integrada -->
-<nav class="relative top-0 left-0 right-0 z-40 bg-[#000000] border-b-2 border-[#00E5FF]">
+<nav class="relative top-0 left-0 right-0 z-40 bg-[#0a0a0a] border-b border-[#2a2a2a]">
   <div class="max-w-7xl mx-auto px-4 sm:px-6">
     <div class="flex items-center h-14 sm:h-16">
       
-      <!-- Izquierda: Logo + Home -->
+      <!-- Izquierda: Logo AlecDev (link al inicio) -->
       <div class="flex items-center gap-3 sm:gap-4 shrink-0">
-        <!-- Logo AlecDev - Visual only -->
-        <div class="flex items-center gap-2 cursor-default">
+        <!-- Logo AlecDev - Clickable -->
+        <a href={baseUrl} class="flex items-center gap-2 hover:opacity-80 transition-opacity">
           <img
             src={`${baseUrl}DEV-LOGO-1.png`}
             alt="AlecDev Logo"
@@ -38,28 +38,11 @@ const projects = [
           <span class="font-pixel text-xs sm:text-sm text-[#FFFFFF] hidden sm:block">
             ALEC<span class="text-[#00E5FF]">DEV</span>
           </span>
-        </div>
-        
-        <!-- Separador vertical -->
-        <div class="w-px h-5 bg-[#00E5FF] hidden sm:block"></div>
-        
-        <!-- Logo Home -->
-        <a
-          href={baseUrl}
-          class="w-8 h-8 sm:w-9 sm:h-9 rounded border-2 border-[#00E5FF] flex items-center justify-center overflow-hidden hover:border-[#FFE500] transition-colors"
-          style="box-shadow: 2px 2px 0 #00E5FF;"
-          aria-label="Inicio"
-        >
-          <img
-            src={`${baseUrl}home-icon.svg`}
-            alt="Home"
-            class="w-full h-full object-contain p-1"
-          />
         </a>
       </div>
 
-      <!-- Centro: Links - con espacio extra a ambos lados -->
-      <ul class="hidden md:flex items-center gap-8 sm:gap-12 mx-auto">
+      <!-- Derecha: Links de navegación -->
+      <ul class="hidden md:flex items-center gap-8 sm:gap-12 ml-auto">
         {navItems.slice(1).map((item) => {
           const isActive = item.href === currentPath || item.href === '#' + currentPath.split('#')[1];
           return (
@@ -68,12 +51,12 @@ const projects = [
                 href={item.href}
                 class:list={[
                   "font-pixel text-[10px] sm:text-xs transition-all relative group py-2",
-                  isActive ? "text-[#FFE500]" : "text-[#00E5FF] hover:text-[#FFE500]"
+                  isActive ? "text-[#FFB30A]" : "text-[#00E5FF] hover:text-[#FFB30A]"
                 ]}
               >
                 {item.label}
                 <span class:list={[
-                  "absolute bottom-0 left-0 h-0.5 bg-[#FFE500] transition-all",
+                  "absolute bottom-0 left-0 h-0.5 bg-[#FFB30A] transition-all",
                   isActive ? "w-full" : "w-0 group-hover:w-full"
                 ]}></span>
               </a>
@@ -82,40 +65,10 @@ const projects = [
         })}
       </ul>
 
-      <!-- Derecha: Buscador con spacer a la izquierda -->
-      <div class="flex items-center gap-4 shrink-0">
-        <!-- Spacer para usar el espacio disponible -->
-        <div class="hidden md:block flex-1 min-w-[100px]"></div>
-        
-        <div class="relative flex items-center max-w-[200px] sm:max-w-[280px] md:max-w-[320px]" id="search-container">
-        <input
-          type="text"
-          id="search-input"
-          placeholder="Buscar..."
-          class="w-full bg-[#0a0a0a] border border-[#00E5FF] px-3 py-1.5 text-[10px] font-pixel text-[#FFFFFF] placeholder-gray-600 focus:outline-none focus:border-[#FFE500]"
-          style="border-radius: 2px;"
-          autocomplete="off"
-        />
-        <button 
-          type="button"
-          id="search-btn"
-          class="absolute right-1 px-2 py-1.5 bg-[#00E5FF] hover:bg-[#FFE500] transition-colors flex items-center justify-center"
-          style="border-radius: 2px;"
-          aria-label="Buscar"
-        >
-          <span class="text-[#000000] text-[10px]">▸</span>
-        </button>
-        
-        <!-- Sugerencias dropdown -->
-        <div id="search-suggestions" class="hidden absolute top-full right-0 mt-1 bg-[#000000] border-2 border-[#00E5FF] max-h-40 overflow-y-auto z-50" style="box-shadow: 4px 4px 0 #00E5FF; border-radius: 4px;">
-        </div>
-      </div>
-      </div>
-
       <!-- Botón hamburger (mobile) -->
       <button
         id="hamburger-btn"
-        class="md:hidden text-[#00E5FF] text-xl p-2 hover:text-[#FFE500] transition-colors ml-2"
+        class="md:hidden text-[#00E5FF] text-xl p-2 hover:text-[#FFB30A] transition-colors ml-2"
         aria-label="Menú"
       >
         ☰
@@ -125,13 +78,13 @@ const projects = [
 </nav>
 
 <!-- Mobile menu desplegable -->
-<div id="mobile-menu" class="hidden md:hidden fixed inset-0 z-40 bg-[#000000]/95 backdrop-blur-sm">
+<div id="mobile-menu" class="hidden md:hidden fixed inset-0 z-40 bg-[#0a0a0a]/95 backdrop-blur-sm">
   <div class="pt-16 px-4">
-    <div class="bg-[#000000] border-2 border-[#00E5FF] p-4" style="box-shadow: 4px 4px 0 #00E5FF; border-radius: 4px;">
+    <div class="bg-[#0a0a0a] border-2 border-[#00E5FF] p-4" style="box-shadow: 4px 4px 0 #00E5FF; border-radius: 4px;">
       <!-- Header del menú -->
       <div class="flex items-center justify-between mb-4 pb-2" style="border-bottom: 1px solid #00E5FF;">
         <span class="font-pixel text-xs text-[#00E5FF]">▛ MENU ▚</span>
-        <button id="close-mobile" class="text-[#00E5FF] hover:text-[#FFE500] text-xl">✕</button>
+        <button id="close-mobile" class="text-[#00E5FF] hover:text-[#FFB30A] text-xl">✕</button>
       </div>
       
       <!-- Links -->
@@ -139,7 +92,7 @@ const projects = [
         <li>
           <a
             href={baseUrl}
-            class="font-pixel text-xs block py-2 transition-all text-[#00E5FF] hover:text-[#FFE500]"
+            class="font-pixel text-xs block py-2 transition-all text-[#00E5FF] hover:text-[#FFB30A]"
           >
             ⌂ INICIO
           </a>
@@ -152,7 +105,7 @@ const projects = [
                 href={item.href}
                 class:list={[
                   "font-pixel text-xs block py-2 transition-all",
-                  isActive ? "text-[#FFE500]" : "text-[#00E5FF] hover:text-[#FFE500]"
+                  isActive ? "text-[#FFB30A]" : "text-[#00E5FF] hover:text-[#FFB30A]"
                 ]}
               >
                 ▸ {item.label}
@@ -161,26 +114,6 @@ const projects = [
           );
         })}
       </ul>
-      
-      <!-- Buscador mobile -->
-      <div class="relative">
-        <input
-          type="text"
-          id="search-input-mobile"
-          placeholder="Buscar proyecto..."
-          class="w-full bg-[#0a0a0a] border border-[#00E5FF] px-3 py-2 text-xs font-pixel text-[#FFFFFF] placeholder-gray-600 focus:outline-none focus:border-[#FFE500]"
-          style="border-radius: 2px;"
-          autocomplete="off"
-        />
-        <button 
-          type="button"
-          id="search-btn-mobile"
-          class="absolute right-1 top-1 bottom-1 px-2 bg-[#00E5FF] hover:bg-[#FFE500] transition-colors flex items-center justify-center"
-          style="border-radius: 2px;"
-        >
-          <span class="text-[#000000] text-xs">▸</span>
-        </button>
-      </div>
     </div>
   </div>
 </div>
@@ -264,22 +197,6 @@ const projects = [
       document.addEventListener('click', (e) => {
         if (searchContainer && !searchContainer.contains(e.target)) {
           suggestionsEl.classList.add('hidden');
-        }
-      });
-    }
-
-    // Búsqueda mobile
-    const searchInputMobile = document.getElementById('search-input-mobile');
-    const searchBtnMobile = document.getElementById('search-btn-mobile');
-    
-    if (searchInputMobile) {
-      if (searchBtnMobile) {
-        searchBtnMobile.addEventListener('click', () => doSearch(searchInputMobile));
-      }
-      searchInputMobile.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          doSearch(searchInputMobile);
         }
       });
     }
